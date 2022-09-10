@@ -1,105 +1,97 @@
-# Project Title
+# Improving Child Wasting Prediction for Zero Hunger Labs
 
-![Current Version](https://img.shields.io/badge/version-v0.1-blue)
-![GitHub contributors](https://img.shields.io/github/contributors/abroniewski/README-Template)
+![Current Version](https://img.shields.io/badge/version-v0.5-blue)
+![GitHub contributors](https://img.shields.io/github/contributors/abroniewski/Child-Wasting-Prediction)
 ![GitHub stars](https://img.shields.io/github/stars/abroniewski/README-Template?style=social)
+![GitHub activity](https://img.shields.io/github/commit-activity/w/abroniewski/Child-Wasting-Prediction?logoColor=brightgreen)
 
 ## Table of contents
 
 - [Getting Started](#getting-started)
-  - [Tools Required](#tools-required)
-  - [Installation](#installation)
-- [Development](#development)
-  - [Part 1: Name](#part-1-landing-zone)
-    - [Subsection](#sub-section)
-  - [Part 2: Name2](#part-2-formatted-and-exploitation-zone)
 - [Running the App](#running-the-app)
+- [Tools Required](#tools-required)
+- [Development](#development)
 - [Authors](#authors)
   - [Adam Broniewski](#adam-broniewski)
+  - [Chun Han (Spencer) Li](#chun-han-spencer-li)
+  - [Himanshu Choudhary](#himanshu-choudhary)
+  - [Luiz Fonseca](#luiz-fonseca)
+  - [Tejaswini Dhupad](#tejaswini-dhupad)
+  - [Zyrako Musaj](#zyrako-musaj)
 - [License](#license)
 - [Acknowledgments](#acknowledgments)
 
 ## Getting Started
 
-This project has a single branch: `main`
+This project has a stable branch called `main`. Different branches are created for during major changes to the model or for feature development.
 
-The project is small and will follow the structure below:
+The project follows the structure below:
 
 ```
-	IdelCompute-Data-Management-Architecture
+	Child-Wasting-Prediction
 	├── README.md
+	├── LICENSE.md
 	├── .gitignore
+	└── notebooks
 	└── src
 		├── all executbale script files
 	└── docs
-		├── support documentation and project descriptions
+		└── support documentation and project descriptions
 	└── data
 		├── raw
 		└── processed
 ```
+## Tools Required
+- Python
+- Pip
 
 ## Running the App
 
-Steps and commands for running the app will be included here
+1. Clone the project to a directory of your choice
+    ```bash
+    git clone https://github.com/abroniewski/Child-Wasting-Prediction.git
+    ```
+2. Pipenv is used to manage dependencies. If you do not have pipenv installed, run the following:
+    ```bash
+    pip install pipx
+    pip install pipenv
+    ```
+3. Install dependencies using the included pipfile. Run the following from the parent directory.
+    ```bash
+    pipenv install
+    pipenv run clean_notebook
+    ```
+3. Once all dependencies are installed, we can run the main file.
+    ```bash
+    python main.py
+    ```
 
-* Example steps:
-  ```
-    Example command
-  ```
-
-1. clone the project
-2. install dependencies using pipfile
-3. run main.py. 
-
-This will use the data provided in [data/raw](https://github.com/abroniewski/README-Template/tree/main/data/raw) and run through the full data pipeline from landing zone, formatted zone and exploitation.
+This will run the full data-preperation, model building and prediction generation using the data provided in [/data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
 
 ### Tools Required
 
-You would require the following tools to develop and run the project:
-
-* Access to UPC Virtual Machine
-* HDFS
-
-### Installation
-
-Installation steps for virtual environment and HDFS are locate in [here in /docs](https://github.com/abroniewski/IdleCompute-Data-Management-Architecture/tree/main/docs)
+No tools currently specified
 
 ## Development
 
-The goal of this project is to develop a theoretical understanding of data management architecture along with a practical implementation of design choices. The work is completed in 2 stages:
+The objective of this project is to work with various ****stakeholders**** to understand their needs and the impact modeling choices have on them. Additionally, the design choices are assessed through a lens of **ethical impact**.
 
-1. Landing zone architecture and external data source identification
-2. Formatted and exploitation zone architecture
-
-### Part 1: Landing Zone
-
-The scope is defined by breaking out all the relevant compoenents that need to be implemented.
-
-#### Sub-heading
-
-We will use datasets from kaggle that are ~5 MB with ~30 attributes. Datasets will be labelled data with a classification problem challenge.
-
-- CSV
-- JSON
-  - Potential 1: [arXiv scholarly articles dataset - 3.34GB](https://www.kaggle.com/datasets/Cornell-University/arxiv)
-  - Potential 2: [Automatic Ticket Classification - 83.4MB](https://www.kaggle.com/datasets/arunagirirajan/automatic-ticket-classification/code)
-- **Assumption:** Dataset could have multiple other sources, types, and formats.
-
-### Part 2: Formatted and Exploitation Zone
-
-This scope has not yet been developed.
+The objective of the **data analytics model** to explore whether a better (more accurate or more generally applicable) forecasting model for predicting child watage can be developed, by researching one of the following two questions:
+1. Is the quality of the additional data sources sufficient to improve or expand the existing GAM forecasting model? Are there additional, public data sources that allow you to improve or expand the existing GAM forecasting model?
+2. Are there other techniques, different than additional data sources, that would lead to an improved GAM forecasting model on the data used in the development of the original GAM forecasting model?
 
 ## Authors
 
-#### Adam Broniewski
-
-* [GitHub](https://github.com/abroniewski)
-* [LinkedIn](https://www.linkedin.com/in/abroniewski/)
-* [Website](https://adambron.com)
+#### Adam Broniewski [GitHub](https://github.com/abroniewski) | [LinkedIn](https://www.linkedin.com/in/abroniewski/) | [Website](https://adambron.com)
+#### Chun Han (Spencer) Li
+#### Himanshu Choudhary
+#### Luiz Fonseca
+#### Tejaswini Dhupad
+#### Zyrako Musaj
 
 ## License
 
-`IdleCompute Data Management Architecture` is open source software [licensed as MIT][license].
+`Child-Wasting-Prediction` is open source software [licensed as MIT][license].
 
 ## Acknowledgments
 
