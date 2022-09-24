@@ -5,6 +5,7 @@
 # General imports
 import pandas as pd
 import numpy as np
+from pandas import DataFrame
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, accuracy_score
 from tqdm import tqdm
@@ -163,6 +164,7 @@ df.drop(df[df['district'].isin(['Burco', 'Saakow', 'Rab Dhuure', 'Baydhaba', 'Af
 
 
 
+
 '''------------SECTION RANDOM FOREST CROSS VALIDATION--------------'''
 #WARNING: this process can take some time, since there are a lot of hyperparameters to investigate. The search space can be manually reduced to speed up the process.
 
@@ -173,101 +175,105 @@ parameter_scores = []
 X = df.drop(columns = ['increase', 'increase_numeric', 'date', 'district', 'prevalence', 'next_prevalence']) #Note that these columns are dropped, the remaining columns are used as explanatory variables
 y = df['next_prevalence'].values
 
-print(f"There are {num_trees_min} min trees and {num_trees_max} max trees")
-print(f"The depth is {depth_min} min depoth and {depth_max} max depth")
-
-for num_trees in tqdm(range(num_trees_min, num_trees_max), desc=" outer", position=0):
-    
-    for depth in tqdm(range(depth_min, depth_max), desc=" inner loop", position=1, leave=False):
-        
-        #Investigate every subset of explanatory variables
-        for features in subsets(X.columns):
-        
-            #First CV split. The 99 refers to the first 3 observations for the 33 districts in the data.
-            Xtrain = X[:99][features].copy().values
-            ytrain = y[:99]
-            Xtest = X[99:132][features].copy().values
-            ytest = y[99:132]
-
-            #Create a RandomForestRegressor with the selected hyperparameters and random state 0.
-            clf = RandomForestRegressor(n_estimators=num_trees, max_depth=depth, random_state=0)
-
-            #Fit to the training data
-            clf.fit(Xtrain, ytrain)
-
-            #Make a prediction on the test data
-            predictions = clf.predict(Xtest)
-
-            #Calculate mean absolute error
-            MAE1 = mean_absolute_error(ytest, predictions)
+################################
+# TODO: Remove code to share output
+df.to_csv("../data/processed/df_before_drop.csv", index=False)
+X.to_csv("../data/processed/X_for_model_run.csv", index=False)
+################################
 
 
-            #Second CV split. The 132 refers to the first 4 observations for the 33 districts in the data.
-            Xtrain = X[:132][features].copy().values
-            ytrain = y[:132]
-            Xtest = X[132:165][features].copy().values
-            ytest = y[132:165]
-
-            #Create a RandomForestRegressor with the selected hyperparameters and random state 0.
-            clf = RandomForestRegressor(n_estimators=num_trees, max_depth=depth, random_state=0)
-
-            #Fit to the training data
-            clf.fit(Xtrain, ytrain)
-
-            #Make a prediction on the test data
-            predictions = clf.predict(Xtest)
-
-            #Calculate mean absolute error
-            MAE2 = mean_absolute_error(ytest, predictions)
-
-            #Calculate the mean MAE over the two folds
-            mean_MAE = (MAE1 + MAE2)/2
-
-            #Store the mean MAE together with the used hyperparameters in list 
-            parameter_scores.append((mean_MAE, num_trees, depth, features))
-
-#Sort the models based on score and retrieve the hyperparameters of the best model
-parameter_scores.sort(key=lambda x: x[0])
-best_model_score = parameter_scores[0][0]
-best_model_trees = parameter_scores[0][1]
-best_model_depth = parameter_scores[0][2]
-best_model_columns = list(parameter_scores[0][3])
-
-
-
-'''------------SECTION FINAL EVALUATION--------------'''
-X = df[best_model_columns].values
-y = df['next_prevalence'].values
-
-#If there is only one explanatory variable, the values need to be reshaped for the model
-if len(best_model_columns) == 1:
-	X = X.reshape(-1, 1)
-
-#Peform evaluation on full data
-Xtrain = X[:165]
-ytrain = y[:165]
-Xtest = X[165:]
-ytest = y[165:]
-
-clf = RandomForestRegressor(n_estimators=best_model_trees, max_depth=best_model_depth, random_state=0)
-clf.fit(Xtrain, ytrain)
-predictions = clf.predict(Xtest)
-
-#Calculate MAE
-MAE = mean_absolute_error(ytest, predictions)
-
-#Generate boolean values for increase or decrease in prevalence. 0 if next prevalence is smaller than current prevalence, 1 otherwise.
-increase           = [0 if x<y else 1 for x in df.iloc[165:]['next_prevalence'] for y in df.iloc[165:]['prevalence']]
-predicted_increase = [0 if x<y else 1 for x in predictions                      for y in df.iloc[165:]['prevalence']]
-
-#Calculate accuracy of predicted boolean increase/decrease
-acc = accuracy_score(increase, predicted_increase)
-
-#Print model parameters
-print('no. of trees: ' + str(best_model_trees) + '\nmax_depth: ' + str(best_model_depth) + '\ncolumns: ' + str(best_model_columns))
-
-#Print model scores
-print(MAE, acc)
+# for num_trees in tqdm(range(num_trees_min, num_trees_max), desc=" outer", position=0):
+#
+#     for depth in tqdm(range(depth_min, depth_max), desc=" inner loop", position=1, leave=False):
+#
+#         #Investigate every subset of explanatory variables
+#         for features in subsets(X.columns):
+#
+#             #First CV split. The 99 refers to the first 3 observations for the 33 districts in the data.
+#             Xtrain = X[:99][features].copy().values
+#             ytrain = y[:99]
+#             Xtest = X[99:132][features].copy().values
+#             ytest = y[99:132]
+#
+#             #Create a RandomForestRegressor with the selected hyperparameters and random state 0.
+#             clf = RandomForestRegressor(n_estimators=num_trees, max_depth=depth, random_state=0)
+#
+#             #Fit to the training data
+#             clf.fit(Xtrain, ytrain)
+#
+#             #Make a prediction on the test data
+#             predictions = clf.predict(Xtest)
+#
+#             #Calculate mean absolute error
+#             MAE1 = mean_absolute_error(ytest, predictions)
+#
+#
+#             #Second CV split. The 132 refers to the first 4 observations for the 33 districts in the data.
+#             Xtrain = X[:132][features].copy().values
+#             ytrain = y[:132]
+#             Xtest = X[132:165][features].copy().values
+#             ytest = y[132:165]
+#
+#             #Create a RandomForestRegressor with the selected hyperparameters and random state 0.
+#             clf = RandomForestRegressor(n_estimators=num_trees, max_depth=depth, random_state=0)
+#
+#             #Fit to the training data
+#             clf.fit(Xtrain, ytrain)
+#
+#             #Make a prediction on the test data
+#             predictions = clf.predict(Xtest)
+#
+#             #Calculate mean absolute error
+#             MAE2 = mean_absolute_error(ytest, predictions)
+#
+#             #Calculate the mean MAE over the two folds
+#             mean_MAE = (MAE1 + MAE2)/2
+#
+#             #Store the mean MAE together with the used hyperparameters in list
+#             parameter_scores.append((mean_MAE, num_trees, depth, features))
+#
+# #Sort the models based on score and retrieve the hyperparameters of the best model
+# parameter_scores.sort(key=lambda x: x[0])
+# best_model_score = parameter_scores[0][0]
+# best_model_trees = parameter_scores[0][1]
+# best_model_depth = parameter_scores[0][2]
+# best_model_columns = list(parameter_scores[0][3])
+#
+#
+#
+# '''------------SECTION FINAL EVALUATION--------------'''
+# X = df[best_model_columns].values
+# y = df['next_prevalence'].values
+#
+# #If there is only one explanatory variable, the values need to be reshaped for the model
+# if len(best_model_columns) == 1:
+# 	X = X.reshape(-1, 1)
+#
+# #Peform evaluation on full data
+# Xtrain = X[:165]
+# ytrain = y[:165]
+# Xtest = X[165:]
+# ytest = y[165:]
+#
+# clf = RandomForestRegressor(n_estimators=best_model_trees, max_depth=best_model_depth, random_state=0)
+# clf.fit(Xtrain, ytrain)
+# predictions = clf.predict(Xtest)
+#
+# #Calculate MAE
+# MAE = mean_absolute_error(ytest, predictions)
+#
+# #Generate boolean values for increase or decrease in prevalence. 0 if next prevalence is smaller than current prevalence, 1 otherwise.
+# increase           = [0 if x<y else 1 for x in df.iloc[165:]['next_prevalence'] for y in df.iloc[165:]['prevalence']]
+# predicted_increase = [0 if x<y else 1 for x in predictions                      for y in df.iloc[165:]['prevalence']]
+#
+# #Calculate accuracy of predicted boolean increase/decrease
+# acc = accuracy_score(increase, predicted_increase)
+#
+# #Print model parameters
+# print('no. of trees: ' + str(best_model_trees) + '\nmax_depth: ' + str(best_model_depth) + '\ncolumns: ' + str(best_model_columns))
+#
+# #Print model scores
+# print(MAE, acc)
 
 ##### OUTPUT #######
 # Total runtime is 13min 53s, with 64 outer loops running for ~13s each
