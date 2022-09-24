@@ -5,6 +5,11 @@ name = "pypi"
 
 [packages]
 jupyter = "*"
+pandas = "*"
+numpy = "*"
+sklearn = "*"
+tqdm = "*"
+pandas-profiling = "*"
 
 [dev-packages]
 
