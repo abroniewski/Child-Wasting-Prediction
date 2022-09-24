@@ -1,24 +1,32 @@
-'''------------SECTION IMPORTS---------------------'''
+#%%
+'''=============================================================
+===================== SECTION IMPORTS ==========================
+================================================================'''
+# General imports
 import pandas as pd
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, accuracy_score
 from tqdm import tqdm
 
-'''------------SECTION USER VARIABLES--------------'''
-#Define the path to your datafolder below
+#%%
+'''=============================================================
+==================== SECTION USER VARIABLES ====================
+================================================================'''
+
+#Defines the path to the dataset folder
 your_datapath = '../data/ZHL/'
 
+#%%
+'''-----------VARIABLE DEFINITION-----------------'''
 #Define search space for number of trees in random forest and depth of trees
 num_trees_min = 64
 num_trees_max = 128
 
 depth_min = 2
 depth_max = 7
-
-
+#%%
 '''------------SECTION FUNCTIONS--------------'''
-
 #Function that creates a pandas dataframe for a single district with columns for the baseline model with semiyearly entries
 def make_district_df_semiyearly(datapath, district_name):
     """
@@ -268,3 +276,4 @@ print(MAE, acc)
 #   max_depth: 6
 #   columns: ['district_encoded']
 #   0.05629900026844118 0.849862258953168
+# %%
