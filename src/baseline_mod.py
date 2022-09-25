@@ -15,8 +15,8 @@ from tqdm import tqdm
 ==================== SECTION USER VARIABLES ====================
 ================================================================'''
 #Defines the path to the dataset folder
-datapath = '../data/ZHL/'
-district_name = "Afgooye" #Adan Yabaal, Afgooye, Afmadow
+your_datapath = '../data/ZHL/'
+#district_name = "Afgooye" #Adan Yabaal, Afgooye, Afmadow
 
 #%%
 '''=============================================================
@@ -49,34 +49,31 @@ def make_district_df_semiyearly(datapath, district_name):
     -------
     df : pandas dataframe
     """
-#%%
-#Read all relevant datasets
-prevalence_df = pd.read_csv(datapath +'prevalence_estimates.csv',parse_dates=['date']) 
-covid_df = pd.read_csv(datapath +'covid.csv',parse_dates=['date'])
-ipc_df = pd.read_csv(datapath +'ipc2.csv',parse_dates=['date'])
-risk_df = pd.read_csv(datapath +'FSNAU_riskfactors.csv',parse_dates=['date'])
-production_df = pd.read_csv(datapath +'production.csv',parse_dates=['date'])
-    
-#%%
-#Select data for specific district
-prevalence_df = prevalence_df[prevalence_df['district']==district_name] 
-ipc_df = ipc_df[ipc_df['district']==district_name]
-risk_df = risk_df[risk_df['district']==district_name]
-production_df = production_df[production_df['district']==district_name]
 
-risk_df = risk_df.groupby(pd.Grouper(key='date', freq='6M')).mean()
-risk_df = risk_df.reset_index()
-risk_df['date'] = risk_df['date'].apply(lambda x : x.replace(day=1))
+    #Read all relevant datasets
+    prevalence_df = pd.read_csv(datapath +'prevalence_estimates.csv',parse_dates=['date']) 
+    covid_df = pd.read_csv(datapath +'covid.csv',parse_dates=['date'])
+    ipc_df = pd.read_csv(datapath +'ipc2.csv',parse_dates=['date'])
+    risk_df = pd.read_csv(datapath +'FSNAU_riskfactors.csv',parse_dates=['date'])
+    production_df = pd.read_csv(datapath +'production.csv',parse_dates=['date'])
+     
+    #Select data for specific district
+    prevalence_df = prevalence_df[prevalence_df['district']==district_name] 
+    ipc_df = ipc_df[ipc_df['district']==district_name]
+    risk_df = risk_df[risk_df['district']==district_name]
+    production_df = production_df[production_df['district']==district_name]
+
+    risk_df = risk_df.groupby(pd.Grouper(key='date', freq='6M')).mean()
+    risk_df = risk_df.reset_index()
+    risk_df['date'] = risk_df['date'].apply(lambda x : x.replace(day=1))
     
-covid_df = covid_df.groupby(pd.Grouper(key='date', freq='6M')).sum()
-covid_df = covid_df.reset_index()
-covid_df['date'] = covid_df['date'].apply(lambda x : x.replace(day=1))
+    covid_df = covid_df.groupby(pd.Grouper(key='date', freq='6M')).sum()
+    covid_df = covid_df.reset_index()
+    covid_df['date'] = covid_df['date'].apply(lambda x : x.replace(day=1))
     
-production_df['cropdiv'] = production_df.count(axis=1)
-  
-#%%
+    production_df['cropdiv'] = production_df.count(axis=1)
     
-#Sort dataframes on date
+    #Sort dataframes on date
     prevalence_df.sort_values('date', inplace=True)
     covid_df.sort_values('date', inplace=True)
     ipc_df.sort_values('date', inplace=True)
@@ -113,10 +110,9 @@ production_df['cropdiv'] = production_df.count(axis=1)
     df.iloc[-1, df.columns.get_loc('increase_numeric')] = np.nan #No info on next month
     
     df.loc[(df.date < pd.to_datetime('2020-03-01')), 'covid'] = 0
-    
     return(df)
     
-    
+#%%    
 #Function that combines the semiyearly dataset (from the function make_district_df_semiyearly) of all districts
 def make_combined_df_semiyearly(datapath):
     """
@@ -146,6 +142,7 @@ def make_combined_df_semiyearly(datapath):
 
     return df
 
+#%%
 #Function that returns every possible subset (except the empty set) of the input list l
 def subsets (l):
     subset_list = []
@@ -155,8 +152,10 @@ def subsets (l):
     return subset_list
 
 
-
-'''------------SECTION DATAFRAME CREATION--------------'''
+#%%
+'''=============================================================
+==================== SECTION DATAFRAME CREATION ================
+================================================================'''
 #Create the dataframe for all districts
 df = make_combined_df_semiyearly(your_datapath)
 
@@ -172,8 +171,10 @@ df.drop(df[df['district'].isin(['Burco', 'Saakow', 'Rab Dhuure', 'Baydhaba', 'Af
 
 
 
+'''=============================================================
+============ SECTION RANDOM FOREST CROSS VALIDATION ============
+================================================================'''
 
-'''------------SECTION RANDOM FOREST CROSS VALIDATION--------------'''
 #WARNING: this process can take some time, since there are a lot of hyperparameters to investigate. The search space can be manually reduced to speed up the process.
 
 #Create empty list to store model scores
@@ -299,4 +300,3 @@ for num_trees in tqdm(range(num_trees_min, num_trees_max), desc=" outer", positi
 #   max_depth: 6
 #   columns: ['district_encoded']
 #   0.05629900026844118 0.849862258953168
-# %%
