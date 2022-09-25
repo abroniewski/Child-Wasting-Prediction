@@ -181,60 +181,69 @@ y = df['next_prevalence'].values
 
 ################################
 # TODO: Remove code to share output
-df.to_csv("../data/processed/df_before_drop.csv", index=False)
-X.to_csv("../data/processed/X_for_model_run.csv", index=False)
+# df.to_csv("../data/processed/df_before_drop.csv", index=False)
+# X.to_csv("../data/processed/X_for_model_run.csv", index=False)
 ################################
+print("you are here")
+
+################################################################
+### How it works?
+# The first 2 nested for loops will try all the different sizes of random forest
+# Within the innermost nest for loop (for freatures in subsets(X.columns)), the RF is
+# trying every single combination of features that are available in the dataframe.
+################################################################
+
+for num_trees in tqdm(range(num_trees_min, num_trees_max), desc=" outer", position=0):
+
+    for depth in tqdm(range(depth_min, depth_max), desc=" inner loop", position=1, leave=False):
+
+        #Investigate every subset of explanatory variables
+        for features in subsets(X.columns):
+            print("hi there")
+
+            #First CV split. The 99 refers to the first 3 observations for the 33 districts in the data.
+            Xtrain = X[:99][features].copy().values
+            ytrain = y[:99]
+            Xtest = X[99:132][features].copy().values
+            ytest = y[99:132]
+
+            #Create a RandomForestRegressor with the selected hyperparameters and random state 0.
+            clf = RandomForestRegressor(n_estimators=num_trees, max_depth=depth, random_state=0)
+
+            #Fit to the training data
+            clf.fit(Xtrain, ytrain)
+
+            #Make a prediction on the test data
+            predictions = clf.predict(Xtest)
+
+            #Calculate mean absolute error
+            MAE1 = mean_absolute_error(ytest, predictions)
 
 
-# for num_trees in tqdm(range(num_trees_min, num_trees_max), desc=" outer", position=0):
-#
-#     for depth in tqdm(range(depth_min, depth_max), desc=" inner loop", position=1, leave=False):
-#
-#         #Investigate every subset of explanatory variables
-#         for features in subsets(X.columns):
-#
-#             #First CV split. The 99 refers to the first 3 observations for the 33 districts in the data.
-#             Xtrain = X[:99][features].copy().values
-#             ytrain = y[:99]
-#             Xtest = X[99:132][features].copy().values
-#             ytest = y[99:132]
-#
-#             #Create a RandomForestRegressor with the selected hyperparameters and random state 0.
-#             clf = RandomForestRegressor(n_estimators=num_trees, max_depth=depth, random_state=0)
-#
-#             #Fit to the training data
-#             clf.fit(Xtrain, ytrain)
-#
-#             #Make a prediction on the test data
-#             predictions = clf.predict(Xtest)
-#
-#             #Calculate mean absolute error
-#             MAE1 = mean_absolute_error(ytest, predictions)
-#
-#
-#             #Second CV split. The 132 refers to the first 4 observations for the 33 districts in the data.
-#             Xtrain = X[:132][features].copy().values
-#             ytrain = y[:132]
-#             Xtest = X[132:165][features].copy().values
-#             ytest = y[132:165]
-#
-#             #Create a RandomForestRegressor with the selected hyperparameters and random state 0.
-#             clf = RandomForestRegressor(n_estimators=num_trees, max_depth=depth, random_state=0)
-#
-#             #Fit to the training data
-#             clf.fit(Xtrain, ytrain)
-#
-#             #Make a prediction on the test data
-#             predictions = clf.predict(Xtest)
-#
-#             #Calculate mean absolute error
-#             MAE2 = mean_absolute_error(ytest, predictions)
-#
-#             #Calculate the mean MAE over the two folds
-#             mean_MAE = (MAE1 + MAE2)/2
-#
-#             #Store the mean MAE together with the used hyperparameters in list
-#             parameter_scores.append((mean_MAE, num_trees, depth, features))
+            #Second CV split. The 132 refers to the first 4 observations for the 33 districts in the data.
+            Xtrain = X[:132][features].copy().values
+            ytrain = y[:132]
+            Xtest = X[132:165][features].copy().values
+            ytest = y[132:165]
+
+            #Create a RandomForestRegressor with the selected hyperparameters and random state 0.
+            clf = RandomForestRegressor(n_estimators=num_trees, max_depth=depth, random_state=0)
+
+            #Fit to the training data
+            clf.fit(Xtrain, ytrain)
+
+            #Make a prediction on the test data
+            predictions = clf.predict(Xtest)
+
+            #Calculate mean absolute error
+            MAE2 = mean_absolute_error(ytest, predictions)
+
+            #Calculate the mean MAE over the two folds
+            mean_MAE = (MAE1 + MAE2)/2
+
+            #Store the mean MAE together with the used hyperparameters in list
+            parameter_scores.append((mean_MAE, num_trees, depth, features))
+            print("end of parameter selected")
 #
 # #Sort the models based on score and retrieve the hyperparameters of the best model
 # parameter_scores.sort(key=lambda x: x[0])
