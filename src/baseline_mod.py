@@ -14,21 +14,25 @@ from tqdm import tqdm
 '''=============================================================
 ==================== SECTION USER VARIABLES ====================
 ================================================================'''
-
 #Defines the path to the dataset folder
 your_datapath = '../data/ZHL/'
 
 #%%
-'''-----------VARIABLE DEFINITION-----------------'''
+'''=============================================================
+==================== VARIABLE DEFINITION =======================
+================================================================'''
 #Define search space for number of trees in random forest and depth of trees
 num_trees_min = 64
 num_trees_max = 128
 
 depth_min = 2
 depth_max = 7
+
 #%%
-'''------------SECTION FUNCTIONS--------------'''
-#Function that creates a pandas dataframe for a single district with columns for the baseline model with semiyearly entries
+'''=============================================================
+==================== SECTION FUNCTIONS =========================
+================================================================'''
+#Function that creates a pandas dataframe for a single district with columns for the baseline model with semi-yearly entries
 def make_district_df_semiyearly(datapath, district_name):
     """
     Function that creates a pandas dataframe for a single district with columns for the baseline model with semiyearly entries
