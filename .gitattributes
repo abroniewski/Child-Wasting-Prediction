@@ -1,0 +1,4 @@
+
+# This will exclude these files from being included in reviews for display and merge conflicts
+*.ipynb linguist-generated=true
+*.csv linguist-generated=true
