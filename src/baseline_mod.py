@@ -170,7 +170,7 @@ df.reset_index(inplace=True, drop=True)
 df.drop(df[df['district'].isin(['Burco', 'Saakow', 'Rab Dhuure', 'Baydhaba', 'Afmadow'])].index, inplace=True)
 
 
-
+#%%
 '''=============================================================
 ============ SECTION RANDOM FOREST CROSS VALIDATION ============
 ================================================================'''
