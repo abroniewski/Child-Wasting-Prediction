@@ -15,7 +15,8 @@ from tqdm import tqdm
 ==================== SECTION USER VARIABLES ====================
 ================================================================'''
 #Defines the path to the dataset folder
-your_datapath = '../data/ZHL/'
+datapath = '../data/ZHL/'
+district_name = "Afgooye" #Adan Yabaal, Afgooye, Afmadow
 
 #%%
 '''=============================================================
@@ -48,31 +49,34 @@ def make_district_df_semiyearly(datapath, district_name):
     -------
     df : pandas dataframe
     """
+#%%
+#Read all relevant datasets
+prevalence_df = pd.read_csv(datapath +'prevalence_estimates.csv',parse_dates=['date']) 
+covid_df = pd.read_csv(datapath +'covid.csv',parse_dates=['date'])
+ipc_df = pd.read_csv(datapath +'ipc2.csv',parse_dates=['date'])
+risk_df = pd.read_csv(datapath +'FSNAU_riskfactors.csv',parse_dates=['date'])
+production_df = pd.read_csv(datapath +'production.csv',parse_dates=['date'])
+    
+#%%
+#Select data for specific district
+prevalence_df = prevalence_df[prevalence_df['district']==district_name] 
+ipc_df = ipc_df[ipc_df['district']==district_name]
+risk_df = risk_df[risk_df['district']==district_name]
+production_df = production_df[production_df['district']==district_name]
 
-	#Read all relevant datasets
-    prevalence_df = pd.read_csv(datapath + 'prevalence_estimates.csv', parse_dates=['date'])
-    covid_df = pd.read_csv(datapath + 'covid.csv', parse_dates=['date'])
-    ipc_df = pd.read_csv(datapath + 'ipc2.csv', parse_dates=['date'])
-    risk_df = pd.read_csv(datapath + 'FSNAU_riskfactors.csv', parse_dates=['date'])
-    production_df = pd.read_csv(datapath + 'production.csv', parse_dates=['date'])
+risk_df = risk_df.groupby(pd.Grouper(key='date', freq='6M')).mean()
+risk_df = risk_df.reset_index()
+risk_df['date'] = risk_df['date'].apply(lambda x : x.replace(day=1))
     
-    #Select data for specific district
-    prevalence_df = prevalence_df[prevalence_df['district']==district_name]
-    ipc_df = ipc_df[ipc_df['district']==district_name]
-    risk_df = risk_df[risk_df['district']==district_name]
-    production_df = production_df[production_df['district']==district_name]
-
-    risk_df = risk_df.groupby(pd.Grouper(key='date', freq='6M')).mean()
-    risk_df = risk_df.reset_index()
-    risk_df['date'] = risk_df['date'].apply(lambda x : x.replace(day=1))
+covid_df = covid_df.groupby(pd.Grouper(key='date', freq='6M')).sum()
+covid_df = covid_df.reset_index()
+covid_df['date'] = covid_df['date'].apply(lambda x : x.replace(day=1))
     
-    covid_df = covid_df.groupby(pd.Grouper(key='date', freq='6M')).sum()
-    covid_df = covid_df.reset_index()
-    covid_df['date'] = covid_df['date'].apply(lambda x : x.replace(day=1))
+production_df['cropdiv'] = production_df.count(axis=1)
+  
+#%%
     
-    production_df['cropdiv'] = production_df.count(axis=1)
-    
-    #Sort dataframes on date
+#Sort dataframes on date
     prevalence_df.sort_values('date', inplace=True)
     covid_df.sort_values('date', inplace=True)
     ipc_df.sort_values('date', inplace=True)
