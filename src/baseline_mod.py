@@ -277,7 +277,6 @@ def append_simple_test_results_to_output_table(model_name: str, y_pred: np.ndarr
     Appends the testing results from simple models generated with build_and_test_simple_model() to the results dataframe from create_dataframe_for_results().
     :param model_name: The name of the model that will appear in results table.
     :param y_pred:
-    :return: None. Modifies dataframe with performance metrics.
     '''
     results_df.loc[model_name,:] = [np.sqrt(mean_squared_error(y_test, y_pred)),
                                     abs(r2_score(y_test, y_pred)),
@@ -289,7 +288,6 @@ def append_cross_validated_test_results_to_output_table(model_name: str, cross_v
     Appends the testing results from cross-validated models generated with build_and_test_cross_validated_model() to the results dataframe from create_dataframe_for_results(). The fucntion modifies values before inserting into results. Cross-validation will return a result for each model produced, so we take a mean() of all scores. The scoring API in scikit always works to maximize the score (i.e. the same API is used for all model scoring). For the API to work, scores that need to be minimized are made negative, and remain reported this way. So we take an abs() of those values.
     :param model_name: The name of the model that will appear in results table.
     :param cross_validated_results: Dataframe holding results from all model predictions
-    :return: None. Modifies dataframe with performance metrics.
     '''
 
     # TODO: I'm not sure exactly why a test_score and train_score exist... Need to figure it out.
@@ -308,7 +306,6 @@ def build_and_test_simple_model(model_title: str, model_object: sklearn.base.Bas
     Generates models using default parameters and tests against the split dataset. This function uses the train/test split data, with no cross validation.
     :param model_title: The name of the model that will appear in results table.
     :param model_object: Scikit-learn model that will be tested
-    :return: None. Modifies dataframe with performance metrics.
     '''
 
     model = model_object    # Create a model based on the model_object passed in
@@ -323,7 +320,6 @@ def build_and_test_cross_validated_model(model_title: str, model_object: sklearn
     :param model_title: The name of the model that will appear in results table.
     :param model_object: Scikit-learn model that will be tested
     :param number_of_splits: Amount of cross-validations to complete.
-    :return: None. Modifies dataframe with performance metrics.
     '''
     # TODO: This KFold needs to be implemented to fold for each distinct 'district_encoded', similar to the way the
     #  non-CV dataset is stratified.
@@ -346,7 +342,6 @@ def build_and_test_parameter_tuned_model(model_title: str, model_object: sklearn
     :param model_object: Scikit-learn model that will be tested
     :param number_of_splits: Amount of cross-validations to complete.
     :param parameter_grid: Parameters that will be searched though to find the optimum
-    :return: None. Modifies dataframe with performance metrics.
     '''
     # TODO: Update KFold for each distinct 'district_encoded'
     # TODO: Update scaling for cross-validated approach.
@@ -395,7 +390,6 @@ def generate_parameter_search_space() -> dict:
 def build_and_test_all_simple_models():
     '''
     Wrapper function for all simple models to be called together.
-    :return: None.
     '''
     build_and_test_simple_model('Decision Tree Regressor (Default)', DecisionTreeRegressor())
     build_and_test_simple_model('Linear Regression (Default)', LinearRegression())
@@ -409,7 +403,6 @@ def build_and_test_all_simple_models():
 def build_and_test_all_cross_validated_models():
     '''
     Wrapper function for all cross-validated models to be called together.
-    :return: None.
     '''
     build_and_test_cross_validated_model('Decision Tree Regressor (CV)', DecisionTreeRegressor(), number_of_splits=2)
     build_and_test_cross_validated_model('Linear Regression (CV)', LinearRegression(), number_of_splits=2)
@@ -420,8 +413,6 @@ def build_and_test_all_cross_validated_models():
 def build_and_test_all_parameter_tuned_models():
     '''
     Wrapper function for all parameter tuned models to be called together.
-
-    :return: None.
     '''
     # TODO: Add output of parameters used in best tuned model
     build_and_test_parameter_tuned_model('Decision Tree Regressor (Tuned)', DecisionTreeRegressor(), number_of_splits=2, parameter_grid=dt_params)
@@ -432,11 +423,9 @@ def build_and_test_all_parameter_tuned_models():
     build_and_test_parameter_tuned_model('Neural Network (Tuned)', MLPRegressor(max_iter=500), number_of_splits=2, parameter_grid=neural_params)
 
 
-def print_all_results() -> str:
+def print_all_results():
     '''
     Prints all results to terminal. This produces 4 tables, formatted using tabulate library. The tables are each sorted in terms of the metric being stored.
-
-    :return: None.
     '''
     print(f"Results Ordered By Model Name")
     print(tabulate(results_df.sort_index(ascending=True), headers='keys', tablefmt='psql'))
@@ -472,6 +461,8 @@ dt_params, lr_ridge_params, lr_elasticnet_params, neural_params = generate_param
 tuned_time_start = time()
 build_and_test_all_parameter_tuned_models()
 tuned_time_end = time()
+
+# TODO: Consider creating build_and_test_time_series_models() as an improvement over the current approach.
 
 end_time = time()
 
