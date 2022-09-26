@@ -25,7 +25,7 @@ from tabulate import tabulate
 ==================== SECTION USER VARIABLES ====================
 ================================================================'''
 # Defines the path to the dataset folder
-your_datapath = 'data/ZHL/'
+your_datapath = '../data/ZHL/'
 #district_name = "Afgooye" #Adan Yabaal, Afgooye, Afmadow
 
 # %%
@@ -214,8 +214,8 @@ def output_original_datasets_to_csv(joined_dataset: pd.DataFrame, modified_test_
     '''
     This function simply saves the full joined dataframe and the 'X' dataset into a CSV file located at data/processed
     '''
-    joined_dataset.to_csv("data/processed/original_df_before_drop.csv", index=False)
-    modified_test_set.to_csv("data/processed/original_X_for_model_run.csv", index=False)
+    joined_dataset.to_csv("../data/processed/original_df_before_drop.csv", index=False)
+    modified_test_set.to_csv("../data/processed/original_X_for_model_run.csv", index=False)
 ################################
 # ###############################################################
 # Generating Data
@@ -234,11 +234,11 @@ def generate_train_test_data_with_transformations(X: pd.DataFrame, y: np.ndarray
     :return: X_train: X_test:
     Y_train: y_test: X: y:
     '''
-    # TODO: encode the test_size denominator to take a count of the number of observations for each district.
+    # FIXME: encode the test_size denominator to take a count of the number of observations for each district.
     #  Is there a check somewhere that all districts have the same number of observations, or is it just known?
-    # TODO: This approach completely disregards temporal trends in the data, as it does not differentiate between what
+    # NOTE: This approach completely disregards temporal trends in the data, as it does not differentiate between what
     #  year a row of data is from.
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=(2 / 7), random_state=42, stratify=X_original[['district_encoded']])
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=(2 / 7), random_state=42, stratify=X[['district_encoded']])
 
     # We do a scaling transformation based on the X_train dataset. This ensures we are not introducing data leakage.
 
@@ -266,7 +266,8 @@ def create_dataframe_for_results():
 
     :return: An empty dataframe that stores RMSE, R-square, and MAE results
     '''
-    # TODO: This is an example of scores we can use. See full list of scores by calling sklearn.metrics.get_scorer_names().
+    # NOTE: This is an example of scores we can use. See full list of scores by calling
+    #   sklearn.metrics.get_scorer_names().
     results = pd.DataFrame(index=[],
                  columns=['RMSE', 'R-square', 'Mean Absolute Error (MAE)'])
     return results
@@ -290,7 +291,7 @@ def append_cross_validated_test_results_to_output_table(model_name: str, cross_v
     :param cross_validated_results: Dataframe holding results from all model predictions
     '''
 
-    # TODO: I'm not sure exactly why a test_score and train_score exist... Need to figure it out.
+    # NOTE: (low) I'm not sure exactly why a test_score and train_score exist... Need to figure it out.
     RMSE = abs(cross_validated_results['test_neg_root_mean_squared_error'].mean())
     R_square = abs(cross_validated_results['test_r2'].mean())
     MAE = abs(cross_validated_results['test_neg_mean_absolute_error'].mean())
@@ -321,14 +322,16 @@ def build_and_test_cross_validated_model(model_title: str, model_object: sklearn
     :param model_object: Scikit-learn model that will be tested
     :param number_of_splits: Amount of cross-validations to complete.
     '''
-    # TODO: This KFold needs to be implemented to fold for each distinct 'district_encoded', similar to the way the
+    # FIXME: (high) This KFold needs to be implemented to fold for each distinct 'district_encoded', similar to the way the
     #  non-CV dataset is stratified.
+    #  https://www.geeksforgeeks.org/stratified-k-fold-cross-validation/
     cv = KFold(n_splits=number_of_splits, random_state=42, shuffle=True)
     model = model_object    # Create a model based on the model_object passed in
 
-    # TODO: The current method of scaling is introducing data leakage across the splits in the CV. Look at using
+    # TODO: (low) The current method of scaling is introducing data leakage across the splits in the CV. Look at using
     #  make_pipeline(preprocessing.StandardScaler(), model) to fix this.
-    #  https://www.geeksforgeeks.org/stratified-k-fold-cross-validation/
+    #  data leakage issue.
+
     cross_val_results = pd.DataFrame(cross_validate(model, X, y, cv=cv,
                                        scoring=['neg_root_mean_squared_error', 'r2', 'neg_mean_absolute_error'],
                                        return_train_score=True))
@@ -343,7 +346,7 @@ def build_and_test_parameter_tuned_model(model_title: str, model_object: sklearn
     :param number_of_splits: Amount of cross-validations to complete.
     :param parameter_grid: Parameters that will be searched though to find the optimum
     '''
-    # TODO: Update KFold for each distinct 'district_encoded'
+    # FIXME: Update KFold for each distinct 'district_encoded'
     # TODO: Update scaling for cross-validated approach.
 
     cv = KFold(n_splits=number_of_splits, random_state=42, shuffle=True)
@@ -359,15 +362,15 @@ def build_and_test_parameter_tuned_model(model_title: str, model_object: sklearn
 
 
 
-def generate_parameter_search_space() -> dict:
+def generate_parameter_search_space():
     '''
     Create the dictionary of parameters that GridSearchCV will search through. Each dictionary is created individually.
     :param: None
     :return: Individual dictionaries for each set of parameters required for a model.
     '''
-    # TODO: Does it make sense to use a class or module instead of a function so that I can group all the parameters
+    # NOTE: Does it make sense to use a class or module instead of a function so that I can group all the parameters
     #  together and just call the one I actually need when passing it into the function?
-    # TODO: for any parameters that are continuous, we should use a continuous object. Use uniform(loc=0, scale=1),
+    # NOTE: for any parameters that are continuous, we should use a continuous object. Use uniform(loc=0, scale=1),
     #   where loc=mean, scale=standard deviation.
 
     decision_tree_params = {"max_depth": [1, 2, 3, 4, 5, 6, 7, None],
@@ -414,13 +417,18 @@ def build_and_test_all_parameter_tuned_models():
     '''
     Wrapper function for all parameter tuned models to be called together.
     '''
-    # TODO: Add output of parameters used in best tuned model
+    # FIXME: Add output of parameters used in best tuned model
     build_and_test_parameter_tuned_model('Decision Tree Regressor (Tuned)', DecisionTreeRegressor(), number_of_splits=2, parameter_grid=dt_params)
     build_and_test_parameter_tuned_model('Linear Regression: Ridge (Tuned)', Ridge(), number_of_splits=2, parameter_grid=lr_ridge_params)
-    # TODO: fix elasticNet below. I think we can use ElasticNet instead of ElasticNetCV here.
+    # TODO: (low) fix elasticNet below. I think we can use ElasticNet instead of ElasticNetCV here.
     # build_and_test_parameter_tuned_model('Linear Regression: Elastic (Tuned)', ElasticNetCV(), number_of_splits=2, parameter_grid=lr_elasticnet_params)
+#<<<<<<< HEAD
     # TODO: How many neural nets are not converging (%)?
     #build_and_test_parameter_tuned_model('Neural Network (Tuned)', MLPRegressor(max_iter=500), number_of_splits=2, parameter_grid=neural_params)
+#=======
+    # TODO: (low) How many neural nets are not converging (%)?
+  #  build_and_test_parameter_tuned_model('Neural Network (Tuned)', MLPRegressor(max_iter=500), number_of_splits=2, parameter_grid=neural_params)
+#>>>>>>> 3f34a6c3594f5fc2453e525ab687e9ed30d0d1f9
 
 
 def print_all_results():
@@ -462,7 +470,11 @@ tuned_time_start = time()
 build_and_test_all_parameter_tuned_models()
 tuned_time_end = time()
 
-# TODO: Consider creating build_and_test_time_series_models() as an improvement over the current approach.
+
+# FIXME: Visuals: Create visuals of predictions, datasets, and data flow that can be used in poster
+# FIXME: Stratify: For CV model building, stratify on encoded_district
+# TODO: (low) Sprint3? -> Data Leakage: Transforming training data for CV
+# TODO: (low) Sprint3? -> Consider creating build_and_test_time_series_models() as an improvement over the current approach.
 
 end_time = time()
 
