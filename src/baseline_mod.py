@@ -179,7 +179,7 @@ df.dropna(inplace=True)
 df.sort_values('date', inplace=True)
 df.reset_index(inplace=True, drop=True)
 
-# Drop disctricts with less than 7 observations: 'Burco', 'Saakow', 'Rab Dhuure', 'Baydhaba', 'Afmadow'
+# Drop districts with less than 7 observations: 'Burco', 'Saakow', 'Rab Dhuure', 'Baydhaba', 'Afmadow'
 df.drop(df[df['district'].isin(['Burco', 'Saakow', 'Rab Dhuure', 'Baydhaba', 'Afmadow'])].index, inplace=True)
 
 
@@ -226,7 +226,9 @@ def generate_train_test_data_with_transformations(X: pd.DataFrame, y: np.ndarray
     Y_train: y_test: X: y:
     '''
     # TODO: encode the test_size denominator to take a count of the number of observations for each district.
-    #  Are we checking somewhere above that they all have the same number of observations, or is it just hard coded/known?
+    #  Is there a check somewhere that all districts have the same number of observations, or is it just known?
+    # TODO: This approach completely disregards temporal trends in the data, as it does not differentiate between what
+    #  year a row of data is from.
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=(2 / 7), random_state=42, stratify=X_original[['district_encoded']])
 
     # We do a scaling transformation based on the X_train dataset. This ensures we are not introducing data leakage.
@@ -350,8 +352,7 @@ def build_and_test_parameter_tuned_model(model_title: str, model_object: sklearn
     append_cross_validated_test_results_to_output_table(model_title, cross_val_results)
 
 
-# TODO: Does it make sense to use a class or module instead of a function so that I can group all the parameters
-#  together and just call the one I actually need when passing it into the function?
+
 
 
 def generate_parameter_search_space() -> dict:
@@ -360,6 +361,8 @@ def generate_parameter_search_space() -> dict:
     :param: None
     :return: Individual dictionaries for each set of parameters required for a model.
     '''
+    # TODO: Does it make sense to use a class or module instead of a function so that I can group all the parameters
+    #  together and just call the one I actually need when passing it into the function?
     # TODO: for any parameters that are continuous, we should use a continuous object. Use uniform(loc=0, scale=1),
     #   where loc=mean, scale=standard deviation.
 
@@ -466,8 +469,13 @@ print_all_results()
 
 # The cross validation is done by calling X[:99]. In this case, the data is ordered by date, and they know already
 # that there are 33 unique districts, so they use a multiple of 33 whenever doing cross-validation. So here,
-# they use rows 1-99 to train (first 3 observations) and the next 33 rows (100-132, the 4th observation) to train.
+# they use rows 1-99 to train (first 3 observations) and the next 33 rows (100-132, the 4th observation) to test.
 # They do this again for a second CV using the first 4 observations to train, and the 5th to test.
+# This approach removes the temporality of the data. It essentially creates 2 models: 1 based on the first 3
+# observations (CV-1), and one on the first 4 observations (CV-2), and then combines those two models as a final.
+# Since the data is sorted by date before being used, this has some naive temporality as it is using the oldest data
+# for training and the most recent data for testing. However, there is no differentiation between the relevance of how
+# far back data goes (e.g. it is not a time series!).
 # ###############################################################
 def build_model(trees_min=num_trees_min, trees_max=num_trees_max, depth_start_search=depth_min,
                 depth_end_search=depth_max):  # Adam: wrapping the original model creation into a function
