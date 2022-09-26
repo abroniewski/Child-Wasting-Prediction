@@ -422,8 +422,8 @@ def build_and_test_all_parameter_tuned_models():
     build_and_test_parameter_tuned_model('Linear Regression: Ridge (Tuned)', Ridge(), number_of_splits=2, parameter_grid=lr_ridge_params)
     # TODO: (low) fix elasticNet below. I think we can use ElasticNet instead of ElasticNetCV here.
     # build_and_test_parameter_tuned_model('Linear Regression: Elastic (Tuned)', ElasticNetCV(), number_of_splits=2, parameter_grid=lr_elasticnet_params)
-    # TODO: (low) How many neural nets are not converging (%)?
-    build_and_test_parameter_tuned_model('Neural Network (Tuned)', MLPRegressor(max_iter=500), number_of_splits=2, parameter_grid=neural_params)
+    # TODO: How many neural nets are not converging (%)?
+    #build_and_test_parameter_tuned_model('Neural Network (Tuned)', MLPRegressor(max_iter=500), number_of_splits=2, parameter_grid=neural_params)
 
 
 def print_all_results():
