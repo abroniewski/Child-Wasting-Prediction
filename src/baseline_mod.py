@@ -25,7 +25,7 @@ from tabulate import tabulate
 ==================== SECTION USER VARIABLES ====================
 ================================================================'''
 # Defines the path to the dataset folder
-your_datapath = '../data/ZHL/'
+your_datapath = 'data/ZHL/'
 #district_name = "Afgooye" #Adan Yabaal, Afgooye, Afmadow
 
 # %%
@@ -214,8 +214,8 @@ def output_original_datasets_to_csv(joined_dataset: pd.DataFrame, modified_test_
     '''
     This function simply saves the full joined dataframe and the 'X' dataset into a CSV file located at data/processed
     '''
-    joined_dataset.to_csv("../data/processed/original_df_before_drop.csv", index=False)
-    modified_test_set.to_csv("../data/processed/original_X_for_model_run.csv", index=False)
+    joined_dataset.to_csv("data/processed/original_df_before_drop.csv", index=False)
+    modified_test_set.to_csv("data/processed/original_X_for_model_run.csv", index=False)
 ################################
 # ###############################################################
 # Generating Data
@@ -420,7 +420,7 @@ def build_and_test_all_parameter_tuned_models():
     # TODO: fix elasticNet below. I think we can use ElasticNet instead of ElasticNetCV here.
     # build_and_test_parameter_tuned_model('Linear Regression: Elastic (Tuned)', ElasticNetCV(), number_of_splits=2, parameter_grid=lr_elasticnet_params)
     # TODO: How many neural nets are not converging (%)?
-    build_and_test_parameter_tuned_model('Neural Network (Tuned)', MLPRegressor(max_iter=500), number_of_splits=2, parameter_grid=neural_params)
+    #build_and_test_parameter_tuned_model('Neural Network (Tuned)', MLPRegressor(max_iter=500), number_of_splits=2, parameter_grid=neural_params)
 
 
 def print_all_results():
@@ -438,7 +438,7 @@ def print_all_results():
     print(f"\n Results Ordered By Mean Absolute Error (MAE)")
     print(tabulate(results_df.sort_values(
         by='Mean Absolute Error (MAE)', ascending=True), headers='keys', tablefmt='psql'))
-    results_df.to_csv('../data/processed/new_results_model_building.csv')
+    results_df.to_csv('data/processed/new_results_model_building.csv')
 
     print(f"\nTuned Parameter Model Time Taken: {(tuned_time_end - tuned_time_start)}")
     print(f"Total Time Taken: {(end_time - start_time)}")
