@@ -20,13 +20,17 @@ from sklearn.model_selection import KFold, train_test_split, cross_validate, Ran
 from tqdm import tqdm
 from tabulate import tabulate
 
+# Visualization imports
+import matplotlib.pyplot as plt
+
+
 # %%
 '''=============================================================
 ==================== SECTION USER VARIABLES ====================
 ================================================================'''
 # Defines the path to the dataset folder
 your_datapath = 'data/ZHL/'
-#district_name = "Afgooye" #Adan Yabaal, Afgooye, Afmadow
+
 
 # %%
 '''=============================================================
@@ -49,14 +53,12 @@ depth_max = 7
 def make_district_df_semiyearly(datapath, district_name):
     """
     Function that creates a pandas dataframe for a single district with columns for the baseline model with semiyearly entries
-
     Parameters
     ----------
     datapath : string
         Path to the datafolder
     district_name : string
         Name of the district
-
     Returns
     -------
     df : pandas dataframe
@@ -132,12 +134,10 @@ def make_district_df_semiyearly(datapath, district_name):
 def make_combined_df_semiyearly(datapath):
     """
     Function that creates a pandas dataframe for all districts with columns for the baseline model with semiyearly entries
-
     Parameters
     ----------
     datapath : string
         Path to the datafolder
-
     Returns
     -------
     df : pandas dataframe
@@ -226,11 +226,9 @@ def generate_train_test_data_with_transformations(X: pd.DataFrame, y: np.ndarray
     based on the X dataset used for training to prevent data leakage. We stratify the data (i.e. ensure the same
     number of observations exist for each district) with stratify=X[['district_encoded']]. is
     represent. In this case, we will use 2 observations to test, and 5 to train.
-
     :param X: Data to train model and
     make predictions
     :param y: Resulting variable to be predicted and tested against
-
     :return: X_train: X_test:
     Y_train: y_test: X: y:
     '''
@@ -263,7 +261,6 @@ def generate_train_test_data_with_transformations(X: pd.DataFrame, y: np.ndarray
 def create_dataframe_for_results():
     '''
     Creates a dataframe that is used to append results from each predictive model each training run.
-
     :return: An empty dataframe that stores RMSE, R-square, and MAE results
     '''
     # NOTE: This is an example of scores we can use. See full list of scores by calling
@@ -422,8 +419,8 @@ def build_and_test_all_parameter_tuned_models():
     build_and_test_parameter_tuned_model('Linear Regression: Ridge (Tuned)', Ridge(), number_of_splits=2, parameter_grid=lr_ridge_params)
     # TODO: (low) fix elasticNet below. I think we can use ElasticNet instead of ElasticNetCV here.
     # build_and_test_parameter_tuned_model('Linear Regression: Elastic (Tuned)', ElasticNetCV(), number_of_splits=2, parameter_grid=lr_elasticnet_params)
-    # TODO: How many neural nets are not converging (%)?
-    #build_and_test_parameter_tuned_model('Neural Network (Tuned)', MLPRegressor(max_iter=500), number_of_splits=2, parameter_grid=neural_params)
+    # TODO: (low) How many neural nets are not converging (%)?
+    build_and_test_parameter_tuned_model('Neural Network (Tuned)', MLPRegressor(max_iter=500), number_of_splits=2, parameter_grid=neural_params)
 
 
 def print_all_results():
@@ -466,7 +463,8 @@ build_and_test_all_parameter_tuned_models()
 tuned_time_end = time()
 
 
-# FIXME: Visuals: Create visuals of predictions, datasets, and data flow that can be used in poster
+# FIXME: Visuals: Create visuals of predictions, datasets, and data flow that can be used in poster --> Not all cells run currectly due to functions used. Still will confirm with other team members! 
+# For time being and to test the result, have plotted the results of the 3 types of errors in Tableau
 # FIXME: Stratify: For CV model building, stratify on encoded_district
 # TODO: (low) Sprint3? -> Data Leakage: Transforming training data for CV
 # TODO: (low) Sprint3? -> Consider creating build_and_test_time_series_models() as an improvement over the current approach.
@@ -474,6 +472,13 @@ tuned_time_end = time()
 end_time = time()
 
 print_all_results()
+
+# ##############################################################
+# Visualization
+# ##############################################################
+#global interpretation
+reg_tree_global = LinearRegression.explain_global(name='Regression Tree')
+show(reg_tree_global)
 
 
 
