@@ -11,6 +11,7 @@ sklearn = "*"
 tqdm = "*"
 pandas-profiling = "*"
 pandasql = "*"
+tabulate = "*"
 
 [dev-packages]
 
