@@ -2,6 +2,8 @@
 '''=============================================================
 ===================== SECTION IMPORTS ==========================
 ================================================================'''
+from time import time
+
 # General imports
 import pandas as pd
 import numpy as np
@@ -207,7 +209,14 @@ y_original = y.copy()
 # done. To see the original model, scroll down to the location after all calls are made.
 # ###############################################################
 # ###############################################################
-
+################################
+def output_original_datasets_to_csv(joined_dataset: pd.DataFrame, modified_test_set: np.ndarray):
+    '''
+    This function simply saves the full joined dataframe and the 'X' dataset into a CSV file located at data/processed
+    '''
+    joined_dataset.to_csv("../data/processed/original_df_before_drop.csv", index=False)
+    modified_test_set.to_csv("../data/processed/original_X_for_model_run.csv", index=False)
+################################
 # ###############################################################
 # Generating Data
 # ###############################################################
@@ -440,18 +449,37 @@ def print_all_results() -> str:
     print(f"\n Results Ordered By Mean Absolute Error (MAE)")
     print(tabulate(results_df.sort_values(
         by='Mean Absolute Error (MAE)', ascending=True), headers='keys', tablefmt='psql'))
-    results_df.to_csv('../data/processed/results_model_building.csv')
+    results_df.to_csv('../data/processed/new_results_model_building.csv')
+
+    print(f"\nTuned Parameter Model Time Taken: {(tuned_time_end - tuned_time_start)}")
+    print(f"Total Time Taken: {(end_time - start_time)}")
+    print(f"Original model data inputs saved to /data/processed/original_")
+    print(f"New model metrics saved to /data/processed/new_results_model_building.csv")
 
 # ###############################################################
 # Final Calls to Generate Models and Results
 # ###############################################################
+start_time = time()
+
+output_original_datasets_to_csv(df, X_original) # for assessment of original model inputs
+
 X_train, X_test, y_train, y_test, X, y = generate_train_test_data_with_transformations(X, y)
 results_df = create_dataframe_for_results()
 build_and_test_all_simple_models()
 build_and_test_all_cross_validated_models()
 dt_params, lr_ridge_params, lr_elasticnet_params, neural_params = generate_parameter_search_space()
+
+tuned_time_start = time()
 build_and_test_all_parameter_tuned_models()
+tuned_time_end = time()
+
+end_time = time()
+
 print_all_results()
+
+
+
+
 
 # ###############################################################
 # ###############################################################
