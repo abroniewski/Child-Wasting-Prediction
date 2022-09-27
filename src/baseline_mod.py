@@ -19,12 +19,17 @@ from sklearn.metrics import mean_absolute_error, accuracy_score, mean_squared_er
 from sklearn.model_selection import KFold, train_test_split, cross_validate, RandomizedSearchCV
 from tqdm import tqdm
 from tabulate import tabulate
+from statistics import mean, stdev
+from sklearn import preprocessing
+from sklearn.model_selection import StratifiedKFold
+from sklearn import linear_model
+from sklearn import datasets
 
 # Visualization imports
 import matplotlib.pyplot as plt
 
 
-# %%
+#%%
 '''=============================================================
 ==================== SECTION USER VARIABLES ====================
 ================================================================'''
@@ -32,7 +37,7 @@ import matplotlib.pyplot as plt
 your_datapath = 'data/ZHL/'
 
 
-# %%
+#%%
 '''=============================================================
 ==================== VARIABLE DEFINITION =======================
 ================================================================'''
@@ -43,7 +48,7 @@ num_trees_max = 128
 depth_min = 2
 depth_max = 7
 
-# %%
+#%%
 '''=============================================================
 ==================== SECTION FUNCTIONS =========================
 ================================================================'''
@@ -129,7 +134,7 @@ def make_district_df_semiyearly(datapath, district_name):
 
     return (df)
 
-#%%
+# #%%
 # Function that combines the semiyearly dataset (from the function make_district_df_semiyearly) of all districts
 def make_combined_df_semiyearly(datapath):
     """
@@ -157,7 +162,7 @@ def make_combined_df_semiyearly(datapath):
 
     return df
 
-#%%
+# #%%
 # Function that returns every possible subset (except the empty set) of the input list l
 def subsets(l):
     subset_list = []
@@ -167,7 +172,7 @@ def subsets(l):
     return subset_list
 
 
-#%%
+# #%%
 '''=============================================================
 ==================== SECTION DATAFRAME CREATION ================
 ================================================================'''
@@ -185,7 +190,7 @@ df.reset_index(inplace=True, drop=True)
 df.drop(df[df['district'].isin(['Burco', 'Saakow', 'Rab Dhuure', 'Baydhaba', 'Afmadow'])].index, inplace=True)
 
 
-#%%
+# #%%
 '''=============================================================
 ============ SECTION RANDOM FOREST CROSS VALIDATION ============
 ================================================================'''
@@ -248,8 +253,10 @@ def generate_train_test_data_with_transformations(X: pd.DataFrame, y: np.ndarray
     y_test = y_test.values.ravel()
 
     # This set of X, y datasets is used for the cross-validated model building.
-    scaler = StandardScaler()
-    X = scaler.fit_transform(X)
+    ## scaler = StandardScaler()
+    scaler = preprocessing.MinMaxScaler()
+    X = scaler.fit_transform(X_train)
+    ## X = scaler.fit_transform(X)
     y = y.values.ravel()
 
     return X_train, X_test, y_train, y_test, X, y
@@ -322,14 +329,30 @@ def build_and_test_cross_validated_model(model_title: str, model_object: sklearn
     # FIXME: (high) This KFold needs to be implemented to fold for each distinct 'district_encoded', similar to the way the
     #  non-CV dataset is stratified.
     #  https://www.geeksforgeeks.org/stratified-k-fold-cross-validation/
-    cv = KFold(n_splits=number_of_splits, random_state=42, shuffle=True)
+  ##  cv = KFold(n_splits=number_of_splits, random_state=42, shuffle=True)
     model = model_object    # Create a model based on the model_object passed in
-
+    
+    ####################################################
+    ####################################################
+    #TJ    
+       
+    # Create StratifiedKFold object.
+    skf = StratifiedKFold(n_splits=10, shuffle=True, random_state=1)
+    lst_accu_stratified = []
+    
+    for train_index, test_index in skf.split(X_train, y):
+        x_train_fold, x_test_fold = X[train_index], X[test_index]
+        y_train_fold, y_test_fold = y[train_index], y[test_index]
+        
+      
+    #TJ
+    ###################################################################
+    ###################################################################
     # TODO: (low) The current method of scaling is introducing data leakage across the splits in the CV. Look at using
     #  make_pipeline(preprocessing.StandardScaler(), model) to fix this.
     #  data leakage issue.
 
-    cross_val_results = pd.DataFrame(cross_validate(model, X, y, cv=cv,
+    cross_val_results = pd.DataFrame(cross_validate(model, x_train_fold, y_train_fold, cv=skf,
                                        scoring=['neg_root_mean_squared_error', 'r2', 'neg_mean_absolute_error'],
                                        return_train_score=True))
     append_cross_validated_test_results_to_output_table(model_title, cross_val_results)
