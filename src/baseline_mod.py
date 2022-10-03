@@ -20,10 +20,6 @@ from sklearn.model_selection import KFold, train_test_split, cross_validate, Ran
 from tqdm import tqdm
 from tabulate import tabulate
 
-# Visualization imports
-import matplotlib.pyplot as plt
-
-
 # %%
 '''=============================================================
 ==================== SECTION USER VARIABLES ====================
@@ -226,9 +222,11 @@ def generate_train_test_data_with_transformations(X: pd.DataFrame, y: np.ndarray
     based on the X dataset used for training to prevent data leakage. We stratify the data (i.e. ensure the same
     number of observations exist for each district) with stratify=X[['district_encoded']]. is
     represent. In this case, we will use 2 observations to test, and 5 to train.
+
     :param X: Data to train model and
     make predictions
     :param y: Resulting variable to be predicted and tested against
+
     :return: X_train: X_test:
     Y_train: y_test: X: y:
     '''
@@ -261,6 +259,7 @@ def generate_train_test_data_with_transformations(X: pd.DataFrame, y: np.ndarray
 def create_dataframe_for_results():
     '''
     Creates a dataframe that is used to append results from each predictive model each training run.
+
     :return: An empty dataframe that stores RMSE, R-square, and MAE results
     '''
     # NOTE: This is an example of scores we can use. See full list of scores by calling
