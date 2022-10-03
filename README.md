@@ -86,7 +86,7 @@ The objective of the **data analytics model** to explore whether a better (more 
 #### Chun Han (Spencer) Li
 #### Himanshu Choudhary
 #### Luiz Fonseca
-#### Tejaswini Dhupad
+#### Tejaswini Dhupad [GitHub](https://github.com/tejaswinidhupad) | [LinkedIn](https://www.linkedin.com/in/tejaswinidhupad/) 
 #### Zyrako Musaj
 
 ## License
