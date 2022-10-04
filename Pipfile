@@ -5,6 +5,13 @@ name = "pypi"
 
 [packages]
 jupyter = "*"
+pandas = "*"
+numpy = "*"
+sklearn = "*"
+tqdm = "*"
+pandas-profiling = "*"
+pandasql = "*"
+tabulate = "*"
 
 [dev-packages]
 
