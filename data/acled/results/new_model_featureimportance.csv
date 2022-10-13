@@ -1,0 +1,32 @@
+features,entropy_score
+prevalence_6lag,0.23818938798555112
+covid,0.0
+ndvi,0.05003561968538099
+ipc,0.05840007673458952
+population,0.04809977086702531
+month,0.009635318247463089
+actor1_Al Shabaab_6m,0.014490719652316264
+actor2_Al Shabaab_6m,0.007884350135540556
+fatalities_6m,0.025937699985746892
+interaction_28_6m,0.008842713760088772
+actor2_AMISOM: African Union Mission in Somalia (2007-) (Ethiopia)_6m,0.00853455668265944
+interaction_27_6m,0.00993920638061592
+number_conflicts_6m,0.02096642102842269
+interaction_12_6m,0.020281146469374588
+interaction_12_1y,0.09780964508306492
+actor2_Al Shabaab_1y,0.013919242894013585
+fatalities_1y,0.02668701602394947
+actor2_AMISOM: African Union Mission in Somalia (2007-) (Ethiopia)_1y,0.006506731117946526
+actor1_Al Shabaab_1y,0.017133214565854805
+actor2_Military Forces of Somalia (2017-2022)_1y,0.0067263345467568295
+actor1_Military Forces of Somalia (2017-2022)_1y,0.012644328303914725
+actor1_Police Forces of Somaliland (2010-)_1y,0.012769997149198638
+actor2_Police Forces of Somaliland (2010-)_1y6m,0.010480701168221324
+interaction_12_1y6m,0.07621041946234558
+fatalities_1y6m,0.04540030232671552
+interaction_27_1y6m,0.024594192653617678
+actor2_Al Shabaab_1y6m,0.01317824654374897
+actor1_Police Forces of Somalia (2017-2022)_1y6m,0.024377750352988007
+actor1_Military Forces of Somalia (2017-2022)_1y6m,0.022193275043558443
+actor2_Military Forces of Somalia (2017-2022)_1y6m,0.009186013515674806
+district_encoded,0.05894560163365499
