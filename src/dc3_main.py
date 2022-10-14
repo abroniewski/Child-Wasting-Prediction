@@ -46,7 +46,7 @@ acled_result_savepath = 'data/acled/results/'
 ================================================================'''
 
 # Function that creates a pandas dataframe for a single district with columns for the baseline model with semi-yearly entries
-def make_district_df_semiyearly(datapath, acled_datapath, district_name,implementation='old'):
+def make_district_df_semiyearly(datapath, acled_datapath, district_name):
 
     """
     Function that creates a pandas dataframe for a single district with columns for the baseline model with semiyearly entries
@@ -78,21 +78,16 @@ def make_district_df_semiyearly(datapath, acled_datapath, district_name,implemen
     production_df = production_df[production_df['district'] == district_name]
 
     
+    
     # risk factor df, as we proposed, use MS(month start) rather then M(month end)
     # the important thing here is we do not have the data before 2017-01-01, so ideally 2017-01-01 nvidi score should be null for all columns
-    if implementation=='new':
-        risk_df = risk_df.groupby(pd.Grouper(key='date', freq='6MS')).mean()
-        risk_df = risk_df.shift(periods = 6, freq='M')
-    else:
-        risk_df = risk_df.groupby(pd.Grouper(key='date', freq='6M')).mean()
-    risk_df = risk_df.reset_index()
-    risk_df['date'] = risk_df['date'].apply(lambda x: x.replace(day=1))
+    risk_df = risk_df.groupby(pd.Grouper(key='date', freq='6MS')).mean()
+    risk_df = risk_df.shift(periods = 6, freq='M')
 
 
-    # Note - we can apply the similar approach as mentioned above for covid data but its starting dates are in between six months, it already merges correctly
-    covid_df = covid_df.groupby(pd.Grouper(key='date', freq='6M')).sum()
-    covid_df = covid_df.reset_index()
-    covid_df['date'] = covid_df['date'].apply(lambda x: x.replace(day=1))
+    # covid df, as we proposed, use MS(month start) rather then M(month end)
+    covid_df = covid_df.groupby(pd.Grouper(key='date', freq='6MS')).sum()
+    risk_df = risk_df.shift(periods = 6, freq='M')
 
 
     # crop production df
@@ -139,8 +134,9 @@ def make_district_df_semiyearly(datapath, acled_datapath, district_name,implemen
     increase_numeric.append(0)
     df['increase_numeric'] = increase_numeric
     df.iloc[-1, df.columns.get_loc('increase_numeric')] = np.nan  # No info on next month
-
-    df.loc[(df.date < pd.to_datetime('2020-03-01')), 'covid'] = 0
+    
+    # filling covid patients as 0 before covid started
+    df.loc[np.isnan(df["covid"]), 'covid'] = 0
 
     return (df)
 
@@ -223,7 +219,7 @@ def make_combined_df_semiyearly(datapath,acled_datapath,implementation):
 
     df_list = []
     for district in districts:
-        district_df = make_district_df_semiyearly(datapath, acled_datapath, district,implementation)
+        district_df = make_district_df_semiyearly(datapath, acled_datapath, district)
         if implementation=='new':
             district_df = combine_conflict_features(district_df,district)
         district_df['district'] = district

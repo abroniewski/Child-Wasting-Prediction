@@ -89,8 +89,8 @@ python3 src/dc3_main.py old
 ```
 - Total no of district after preproecssing are - 55 
 - number of observations for training are - 275 and for testing are - 110 
-- MAE(Mean Absolute Error) score for old model on training data is - 0.021772802
-- MAE(Mean Absolute Error) score for old model on test data is - 0.050992159
+- MAE(Mean Absolute Error) score for old model on training data is - 0.021391660328296973
+- MAE(Mean Absolute Error) score for old model on test data is - 0.0512394083425881 
 
 
 ```
@@ -98,8 +98,8 @@ python3 src/dc3_main.py new
 ```
 - Total no of district after preproecssing are - 55 
 - number of observations for training are - 275 and for testing are - 110  
-- MAE(Mean Absolute Error) score for new model on training data is - 0.02150441
-- MAE(Mean Absolute Error) score for new model on test data is - 0.04915983
+- MAE(Mean Absolute Error) score for new model on training data is - 0.021117145120009326
+- MAE(Mean Absolute Error) score for new model on test data is - 0.05013554272083966
 
 
 ## Authors
