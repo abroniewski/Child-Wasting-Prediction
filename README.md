@@ -61,12 +61,14 @@ The project follows the structure below:
     pipenv install
     pipenv run clean_notebook
     ```
-3. Once all dependencies are installed, we can run the main file.
+4. Once all dependencies are installed, we can run the main file. 
     ```bash
-    python main.py
+    python3 src/dc3_main.py
     ```
+    The parameters "**old**" and "**new**" can be passed with the above script to generate **baseline** and **modified approach** results. By default it isrunning on our new model.  
 
-This will run the full data-preperation, model building and prediction generation using the data provided in [/data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
+
+This will run the full data-preperation, model building and prediction generation using the data provided in [data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
 
 ### Tools Required
 
@@ -79,6 +81,26 @@ The objective of this project is to work with various ****stakeholders**** to un
 The objective of the **data analytics model** to explore whether a better (more accurate or more generally applicable) forecasting model for predicting child watage can be developed, by researching one of the following two questions:
 1. Is the quality of the additional data sources sufficient to improve or expand the existing GAM forecasting model? Are there additional, public data sources that allow you to improve or expand the existing GAM forecasting model?
 2. Are there other techniques, different than additional data sources, that would lead to an improved GAM forecasting model on the data used in the development of the original GAM forecasting model?
+
+
+## Results
+```
+python3 src/dc3_main.py old
+```
+- Total no of district after preproecssing are - 55 
+- number of observations for training are - 275 and for testing are - 110 
+- MAE(Mean Absolute Error) score for old model on training data is - 0.021772802
+- MAE(Mean Absolute Error) score for old model on test data is - 0.050992159
+
+
+```
+python3 src/dc3_main.py new
+```
+- Total no of district after preproecssing are - 55 
+- number of observations for training are - 275 and for testing are - 110  
+- MAE(Mean Absolute Error) score for new model on training data is - 0.02150441
+- MAE(Mean Absolute Error) score for new model on test data is - 0.04915983
+
 
 ## Authors
 
