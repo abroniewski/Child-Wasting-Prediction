@@ -431,8 +431,6 @@ def main(implementation):
     test_MAE = mean_absolute_error(ytest, predictions)
 
     #Print model scores
-    # old model MAE = 0.05099215982057738
-    # new model MAE = 0.049159835229428975
     print(f"MAE(Mean Absolute Error) score for {implementation} model on test data is - {test_MAE} \n")
 
 
