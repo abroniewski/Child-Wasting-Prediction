@@ -108,7 +108,7 @@ python3 src/dc3_main.py new
 #### Chun Han (Spencer) Li
 #### Himanshu Choudhary
 #### Luiz Fonseca
-#### Tejaswini Dhupad
+#### Tejaswini Dhupad [GitHub](https://github.com/tejaswinidhupad) | [LinkedIn](https://www.linkedin.com/in/tejaswinidhupad/) 
 #### Zyrako Musaj
 
 ## License
