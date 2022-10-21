@@ -4,9 +4,17 @@ import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error, accuracy_score
 
+pd.options.mode.chained_assignment = None # do not show set copy warnings
+
+
 '''------------SECTION USER VARIABLES--------------'''
 #Define the path to your datafolder below
-your_datapath = '../data/ZHL/'
+your_datapath = 'data/ZHL/'
+
+
+#Define the path to save your results
+result_savepath = 'results/'
+
 
 #Define search space for number of trees in random forest and depth of trees
 num_trees_min = 64
@@ -256,3 +264,10 @@ print('no. of trees: ' + str(best_model_trees) + '\nmax_depth: ' + str(best_mode
 
 #Print model scores
 print(MAE, acc)
+
+# save the prediction results 
+Xtest = df.iloc[165:,:]
+Xtest['predictions'] = predictions
+Xtest.reset_index(inplace=True)
+filename = result_savepath +'model_1_testresults.csv' # filename 
+Xtest.to_csv(filename,index=False)

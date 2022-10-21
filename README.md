@@ -8,9 +8,9 @@
 ## Table of contents
 
 - [Getting Started](#getting-started)
-- [Running the App](#running-the-app)
-- [Tools Required](#tools-required)
-- [Development](#development)
+- [Requirments](#tools-required)
+- [Running the code](#running-the-code)
+- [Development](#Development)
 - [Authors](#authors)
   - [Adam Broniewski](#adam-broniewski)
   - [Chun Han (Spencer) Li](#chun-han-spencer-li)
@@ -19,7 +19,6 @@
   - [Tejaswini Dhupad](#tejaswini-dhupad)
   - [Zyrako Musaj](#zyrako-musaj)
 - [License](#license)
-- [Acknowledgments](#acknowledgments)
 
 ## Getting Started
 
@@ -31,46 +30,70 @@ The project follows the structure below:
 	Child-Wasting-Prediction
 	├── README.md
 	├── LICENSE.md
-	├── .gitignore
-	└── notebooks
+	├── requirments.txt
 	└── src
 		├── all executbale script files
-	└── docs
-		└── support documentation and project descriptions
+	└── results
+		├── contains results in csv files
 	└── data
-		├── raw
-		└── processed
+		└── contains raw and preocessed data
 ```
-## Tools Required
-- Python
-- Pip
+## Requirments
+- pandas
+- sklearn
+- numpy
+- matplotlib
 
-## Running the App
+## Running the Code
 
 1. Clone the project to a directory of your choice
-    ```bash
+    ```
     git clone https://github.com/abroniewski/Child-Wasting-Prediction.git
     ```
 2. Pipenv is used to manage dependencies. If you do not have pipenv installed, run the following:
-    ```bash
-    pip install pipx
-    pip install pipenv
     ```
-3. Install dependencies using the included pipfile. Run the following from the parent directory.
-    ```bash
-    pipenv install
-    pipenv run clean_notebook
+    pip install -r requirments.txt
     ```
-3. Once all dependencies are installed, we can run the main file.
-    ```bash
-    python main.py
+3. Once all dependencies are installed, we can run the ZHL Baseline model file **(model_1)**. 
+    ```
+    python3 src/Baseline.py
+    ```
+    **Expected Outcome -** 
+    ```
+    no. of trees: 74
+    max_depth: 6
+    columns: ['district_encoded']
+    0.05629900026844118 0.849862258953168
     ```
 
-This will run the full data-preperation, model building and prediction generation using the data provided in [/data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
+4. From below code, we can run our main file. 
+    ```
+    python3 src/dc3_main.py {model_2/model_3}
+    ```
+    The parameters "**model_2**" and "**model_3**" can be passed with the above script to generate **our baseline** and **combined conflict data model** results respecively. By default it is running on our combined conflict data model (model_3).  
 
-### Tools Required
+    **Expected Outcome with model_2 -** 
+    ```
+    Total no of district after preproecssing are - 55 
+    number of observations for training are - 275 and for testing are - 110 
+    MAE(Mean Absolute Error) score for model_2 model on training data is - 0.021391660328296973
+    MAE(Mean Absolute Error) score for model_2 model on test data is - 0.0512394083425881 
+    ```
+    **Expected Outcome with model_3 -** 
+    ```
+    Total no of district after preproecssing are - 55 
+    number of observations for training are - 275 and for testing are - 110 
+    MAE(Mean Absolute Error) score for model_3 model on training data is - 0.021117145120009326
+    MAE(Mean Absolute Error) score for model_3 model on test data is - 0.05013554272083966 
+    ```
+4.  The below code combine all the results from model_1 (ZHL Baseline),model_2 (Our Baseline) and model_3 (conflict data combined model). 
+    ```
+    python3 src/combine_results.py
+    ```
 
-No tools currently specified
+
+This will run the full data-preperation, model building and prediction generation using the data provided in [data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
+
 
 ## Development
 
@@ -79,6 +102,7 @@ The objective of this project is to work with various ****stakeholders**** to un
 The objective of the **data analytics model** to explore whether a better (more accurate or more generally applicable) forecasting model for predicting child watage can be developed, by researching one of the following two questions:
 1. Is the quality of the additional data sources sufficient to improve or expand the existing GAM forecasting model? Are there additional, public data sources that allow you to improve or expand the existing GAM forecasting model?
 2. Are there other techniques, different than additional data sources, that would lead to an improved GAM forecasting model on the data used in the development of the original GAM forecasting model?
+
 
 ## Authors
 
@@ -92,10 +116,3 @@ The objective of the **data analytics model** to explore whether a better (more 
 ## License
 
 `Child-Wasting-Prediction` is open source software [licensed as MIT][license].
-
-## Acknowledgments
-
-....
-
-[//]: #
-[license]: https://github.com/abroniewski/LICENSE.md
