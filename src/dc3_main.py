@@ -246,7 +246,8 @@ def data_preprocessing(df):
 
     Returns
     -------
-    df : pandas dataframe
+    X : pandas dataframe with input variables
+    y : pandas dataframe with target variable
     district_count : total count of districts each with 7 observations
     """
 
@@ -284,7 +285,14 @@ def data_preprocessing(df):
     # print("Total no of district after droping are - ",len(df['district'].value_counts().keys()))
 
 
-    return df, district_count
+
+
+    # Define target and explanatory variables
+    # dropping unnecessary columns
+    X = df.drop(columns = ['increase', 'increase_numeric', 'date', 'district', 'prevalence', 'next_prevalence']) #Note that these columns are dropped, the remaining columns are used as explanatory variables
+    y = df['next_prevalence'].values
+
+    return X,y, district_count
 
 
 
@@ -292,15 +300,17 @@ def data_preprocessing(df):
 
 
 # function for splitting the data in train and test for modelling
-def train_test_split(df, district_count):
+def train_test_split(X,y, district_count):
 
     """
     Function to split train and test data
 
     Parameters
     ----------
-    df : dataframe
+    X : dataframe
         dataframe with added/baseline features (dependes on new vs old implementation)
+    y : dataframe
+        dataframe with target variable
     district_count : integer
         total count of districts each with 7 observations
 
@@ -310,12 +320,6 @@ def train_test_split(df, district_count):
     
     """
 
-
-
-    # Define target and explanatory variables
-    # dropping unnecessary columns
-    X = df.drop(columns = ['increase', 'increase_numeric', 'date', 'district', 'prevalence', 'next_prevalence']) #Note that these columns are dropped, the remaining columns are used as explanatory variables
-    y = df['next_prevalence'].values
 
 
 
@@ -343,48 +347,23 @@ def train_test_split(df, district_count):
 
 
 
+# function for training the model
+def model_training(Xtrain, ytrain):
+    """
+    Function to train the model
 
+    Parameters
+    ----------
+    Xtrain : dataframe
+        dataframe with training data
+    ytrain : dataframe
+        dataframe with training target variable
 
-
-
-'''=============================================================
-===================== SECTION MAIN FUNCTION ==========================
-================================================================'''
-# ## =================================================================================================
-# ## MAIN FUNCTION
-def main(implementation):
-    # select between "new" and "old" implementation to reproduce results
-    # implementation = 'new'
+    Returns
+    -------
+    trained randomforest model 
     
-    # Create the dataframe for all districts
-    df = make_combined_df_semiyearly(your_datapath,acled_datapath,implementation)
-
-
-    # data preprocessing 
-    df,district_count = data_preprocessing(df)
-    print(f"\nTotal no of district after preproecssing are - {district_count} \n")
-
-
-    # prepare data for train and test
-    Xtrain, ytrain, Xtest, ytest = train_test_split(df, district_count)
-    train_data_count = len(Xtrain)
-
-
-
-    '''------------------------------------------------ MODEL TRAINING AND EVALUATION -------------------------------------------------'''
-
-
-    '''1. ------------------------- MODEL TRAINING------------------'''
-    # ### ===========================================================================================
-    # ### RANDOM FOREST MODEL
-
-
-
-    # The chages made in the baseline model
-    # 1. removing the loop and training model on the default parameters of random forest ( since randomeforest itself selects the best parameters(features) we are not performing feature selection. Although 
-    # this approach can be extended by selecting best hyperparameters for random forest model using paramter tunning )
-    # 2. Removing classification accuracy as a model ealuation method
-
+    """
 
     #Create a RandomForestRegressor with the random state 0.
     reg = RandomForestRegressor(random_state=0)
@@ -403,15 +382,101 @@ def main(implementation):
     #Training data MAE and accuracy
     print(f"MAE(Mean Absolute Error) score for {implementation} model on training data is - {train_MAE}\n")
 
-    
-    # calculate feature importance and save
+
+    # calculate feature importance and save plot
     feat_importances = pd.Series(reg.feature_importances_, index= Xtrain.columns)
     feat_importances_df = pd.DataFrame({'features':feat_importances.index, 'entropy_score':feat_importances.values}).sort_values(by=['entropy_score'],ascending=False)
     filename = acled_result_savepath+implementation+'_model_featureimportance.csv' # filname according to paths
     feat_importances_df.to_csv(filename,index=False)     # save important features
-    # to plot the feature importance
+    
+    # # to save the feature importance plot uncomment below code
     # plt.figure(num=None, figsize=(10,8), dpi=80, facecolor='w', edgecolor='k')
-    # feat_importances.nlargest(15).plot(kind='barh')
+    # feat_importances.sort_values().plot(kind='barh')
+    # filename = acled_result_savepath+implementation+'_model_featureimportance.png' # filname according to paths
+    # plt.savefig(filename) # save plot
+
+    return reg
+
+
+
+# function to test the model
+def model_evaluation(reg,Xtest,ytest):
+    """
+    Function to test the model
+
+    Parameters
+    ----------
+    Xtest : dataframe
+        dataframe with test data
+    ytrain : dataframe
+        dataframe with test target variable
+
+    Returns
+    -------
+    predictions on test data using randomforest model 
+    
+    """
+
+    # get predictions on data
+    predictions = reg.predict(Xtest)
+    
+    #Calculate MAE
+    test_MAE = mean_absolute_error(ytest, predictions)
+
+    #Print model scores
+    print(f"MAE(Mean Absolute Error) score for {implementation} model on test data is - {test_MAE} \n")
+
+    return predictions
+
+
+
+
+
+
+
+
+
+
+'''=============================================================
+===================== SECTION MAIN FUNCTION ==========================
+================================================================'''
+# ## =================================================================================================
+# ## MAIN FUNCTION
+def main(implementation):
+    # select between "new" and "old" implementation to reproduce results
+    # implementation = 'new'
+    
+    # Create the dataframe for all districts
+    df = make_combined_df_semiyearly(your_datapath,acled_datapath,implementation)
+
+
+    # data preprocessing 
+    X,y,district_count = data_preprocessing(df)
+    print(f"\nTotal no of district after preproecssing are - {district_count} \n")
+
+
+    # prepare data for train and test
+    Xtrain, ytrain, Xtest, ytest = train_test_split(X,y, district_count)
+    train_data_count = len(Xtrain)
+
+
+
+    '''------------------------------------------------ MODEL TRAINING AND EVALUATION -------------------------------------------------'''
+
+
+    '''1. ------------------------- MODEL TRAINING------------------'''
+    # ### ===========================================================================================
+    # ### RANDOM FOREST MODEL
+
+    # The chages made in the baseline model
+    # 1. removing the loop and training model on the default parameters of random forest ( since randomeforest itself selects the best parameters(features) we are not performing feature selection. Although 
+    # this approach can be extended by selecting best hyperparameters for random forest model using paramter tunning )
+    # 2. Removing classification accuracy as a model ealuation method
+
+
+
+    # training the randomforest model 
+    reg = model_training(Xtrain, ytrain)
 
 
 
@@ -424,14 +489,9 @@ def main(implementation):
         # - So we will measure our model performance using Mean Absoulte Error (MAE) only.
 
 
-    # get predictions on 
-    predictions = reg.predict(Xtest)
-    
-    #Calculate MAE
-    test_MAE = mean_absolute_error(ytest, predictions)
+    # evaluating the random forest model
+    predictions = model_evaluation(reg,Xtest,ytest)
 
-    #Print model scores
-    print(f"MAE(Mean Absolute Error) score for {implementation} model on test data is - {test_MAE} \n")
 
 
     # #### SAVE prediction RESULTS with TEST data    
