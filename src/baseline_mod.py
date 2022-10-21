@@ -26,7 +26,7 @@ from tabulate import tabulate
 ================================================================'''
 # Defines the path to the dataset folder
 your_datapath = 'data/ZHL/'
-#district_name = "Afgooye" #Adan Yabaal, Afgooye, Afmadow
+
 
 # %%
 '''=============================================================
@@ -49,14 +49,12 @@ depth_max = 7
 def make_district_df_semiyearly(datapath, district_name):
     """
     Function that creates a pandas dataframe for a single district with columns for the baseline model with semiyearly entries
-
     Parameters
     ----------
     datapath : string
         Path to the datafolder
     district_name : string
         Name of the district
-
     Returns
     -------
     df : pandas dataframe
@@ -132,12 +130,10 @@ def make_district_df_semiyearly(datapath, district_name):
 def make_combined_df_semiyearly(datapath):
     """
     Function that creates a pandas dataframe for all districts with columns for the baseline model with semiyearly entries
-
     Parameters
     ----------
     datapath : string
         Path to the datafolder
-
     Returns
     -------
     df : pandas dataframe
@@ -466,14 +462,19 @@ build_and_test_all_parameter_tuned_models()
 tuned_time_end = time()
 
 
-# FIXME: Visuals: Create visuals of predictions, datasets, and data flow that can be used in poster
-# FIXME: Stratify: For CV model building, stratify on encoded_district
 # TODO: (low) Sprint3? -> Data Leakage: Transforming training data for CV
 # TODO: (low) Sprint3? -> Consider creating build_and_test_time_series_models() as an improvement over the current approach.
 
 end_time = time()
 
 print_all_results()
+
+# ##############################################################
+# Visualization
+# ##############################################################
+#global interpretation
+reg_tree_global = LinearRegression.explain_global(name='Regression Tree')
+show(reg_tree_global)
 
 
 
