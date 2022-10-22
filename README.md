@@ -46,6 +46,8 @@ The project follows the structure below:
 
 ## Running the Code
 
+### Main Code
+
 1. Clone the project to a directory of your choice
     ```
     git clone https://github.com/abroniewski/Child-Wasting-Prediction.git
@@ -54,7 +56,8 @@ The project follows the structure below:
     ```
     pip install -r requirments.txt
     ```
-3. Once all dependencies are installed, we can run the ZHL Baseline model file **(model_1)**. 
+
+3. Once all dependencies are installed, we can run the ZHL Baseline model file **(model_1)**. The output is saved in result folder. 
     ```
     python3 src/Baseline.py
     ```
@@ -66,7 +69,13 @@ The project follows the structure below:
     0.05629900026844118 0.849862258953168
     ```
 
-4. From below code, we can run our main file. 
+4. The below code will generate the extracted features data file from conflict data. The output data is saved in acled folder.
+
+```
+python3 src/feature_engineering.py
+```
+
+5. The below code will run our main file, it will generate baseline and conflict data model (model with conflict features) results.  
     ```
     python3 src/dc3_main.py {model_2/model_3}
     ```
@@ -86,13 +95,13 @@ The project follows the structure below:
     MAE(Mean Absolute Error) score for model_3 model on training data is - 0.021117145120009326
     MAE(Mean Absolute Error) score for model_3 model on test data is - 0.05013554272083966 
     ```
-4.  The below code combine all the results from model_1 (ZHL Baseline),model_2 (Our Baseline) and model_3 (conflict data combined model). 
+
+6.  The below code combine all the results from model_1 (ZHL Baseline),model_2 (Our Baseline) and model_3 (conflict data combined model). 
     ```
     python3 src/combine_results.py
     ```
 
-
-This will run the full data-preperation, model building and prediction generation using the data provided in [data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
+This above codes will run the full data-preperation, model building and prediction generation using the data provided in [data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
 
 
 ## Development
