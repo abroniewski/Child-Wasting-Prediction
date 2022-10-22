@@ -46,8 +46,6 @@ The project code follows the structure below:
 
 ## Running the Code
 
-### Main Code
-
 1. Unzip the folder Child-Wasting-Prediction.zip and switch to the folder
     ```
     cd Child-Wasting-Prediction
