@@ -22,9 +22,9 @@
 
 ## Getting Started
 
-This project has a stable branch called `main`. Different branches are created for during major changes to the model or for feature development.
+This project contains is part of Data challenge 3: Improving Child Wasting Prediction for Zero Hunger Labs.
 
-The project follows the structure below:
+The project code follows the structure below:
 
 ```
 	Child-Wasting-Prediction
@@ -32,11 +32,11 @@ The project follows the structure below:
 	├── LICENSE.md
 	├── requirments.txt
 	└── src
-		├── all executbale script files
+		├── all executbale scripts
 	└── results
-		├── contains results in csv files
+		├── contains all results in csv files
 	└── data
-		└── contains raw and preocessed data
+		└── contains raw and processed data
 ```
 ## Requirments
 - pandas
@@ -48,11 +48,12 @@ The project follows the structure below:
 
 ### Main Code
 
-1. Clone the project to a directory of your choice
+1. Unzip the folder Child-Wasting-Prediction.zip and switch to the folder
     ```
-    git clone https://github.com/abroniewski/Child-Wasting-Prediction.git
+    cd Child-Wasting-Prediction
     ```
-2. Pipenv is used to manage dependencies. If you do not have pipenv installed, run the following:
+
+2. Install the dependencies:
     ```
     pip install -r requirments.txt
     ```
