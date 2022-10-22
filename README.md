@@ -70,9 +70,9 @@ The project code follows the structure below:
 
 4. The below code will extract the features from raw conflict data. The output data is saved in acled folder.
 
-```
-python3 src/feature_engineering.py
-```
+    ```
+    python3 src/feature_engineering.py
+    ```
 
 5. The below code will run our main file, it will generate baseline and conflict data model (model with conflict features) results.  
     ```
@@ -95,7 +95,7 @@ python3 src/feature_engineering.py
     MAE(Mean Absolute Error) score for model_3 model on test data is - 0.05013554272083966 
     ```
 
-6.  The below code combine all the results from model_1 (ZHL Baseline),model_2 (Our Baseline) and model_3 (conflict data combined model). 
+6.  The below code combine all the results from model_1 (ZHL Baseline),model_2 (Our Baseline) and model_3 (conflict data combined model) for comparision. 
     ```
     python3 src/combine_results.py
     ```
