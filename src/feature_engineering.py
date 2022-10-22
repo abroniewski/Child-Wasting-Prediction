@@ -172,8 +172,11 @@ def feature_selection():
 
     # Feature importance according to each model
     importance_6m = list(zip(model_6m.feature_names_in_, model_6m.feature_importances_))
+    importance_6m.sort(key=lambda x: x[1])
     importance_1y = list(zip(model_1y.feature_names_in_, model_1y.feature_importances_))
+    importance_1y.sort(key=lambda x: x[1])
     importance_1y6m = list(zip(model_1y6m.feature_names_in_, model_1y6m.feature_importances_))
+    importance_1y6m.sort(key=lambda x: x[1])
 
     # Saving results to csv
     final_6m_df[['date', 'next_prevalence', 'district'] + [x[0] for x in importance_6m[-10:]][::-1]].to_csv('./features_6m.csv', index=False)
