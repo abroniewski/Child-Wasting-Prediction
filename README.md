@@ -22,7 +22,7 @@
 
 ## Getting Started
 
-This project contains is part of Data challenge 3: Improving Child Wasting Prediction for Zero Hunger Labs.
+This project contains the technical part of Data challenge 3: Improving Child Wasting Prediction for Zero Hunger Labs.
 
 The project code follows the structure below:
 
@@ -70,7 +70,7 @@ The project code follows the structure below:
     0.05629900026844118 0.849862258953168
     ```
 
-4. The below code will generate the extracted features data file from conflict data. The output data is saved in acled folder.
+4. The below code will extract the features from raw conflict data. The output data is saved in acled folder.
 
 ```
 python3 src/feature_engineering.py
