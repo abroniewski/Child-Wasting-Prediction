@@ -7,8 +7,9 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.metrics import mean_absolute_error, accuracy_score
 
 # Input file paths (change these paths)
-acled_in = "https://raw.githubusercontent.com/abroniewski/Child-Wasting-Prediction/main/data/raw/1900-01-01-2022-09-27-Eastern_Africa-Somalia.csv"
-prevalence_in = "https://raw.githubusercontent.com/abroniewski/Child-Wasting-Prediction/main/data/ZHL/prevalence_estimates.csv"
+acled_in = "data/acled/raw/1900-01-01-2022-09-27-Eastern_Africa-Somalia.csv"
+prevalence_in = "data/ZHL/prevalence_estimates.csv"
+data_save_path = "data/acled/"
 
 def filter_data():
     """
@@ -179,9 +180,9 @@ def feature_selection():
     importance_1y6m.sort(key=lambda x: x[1])
 
     # Saving results to csv
-    final_6m_df[['date', 'next_prevalence', 'district'] + [x[0] for x in importance_6m[-10:]][::-1]].to_csv('./features_6m.csv', index=False)
-    final_1y_df[['date', 'next_prevalence', 'district'] + [x[0] for x in importance_1y[-10:]][::-1]].to_csv('./features_1y.csv', index=False)
-    final_1y6m_df[['date', 'next_prevalence', 'district'] + [x[0] for x in importance_1y6m[-10:]][::-1]].to_csv('./features_1y6m.csv', index=False)
+    final_6m_df[['date', 'next_prevalence', 'district'] + [x[0] for x in importance_6m[-10:]][::-1]].to_csv(data_save_path+'/features_6m.csv', index=False)
+    final_1y_df[['date', 'next_prevalence', 'district'] + [x[0] for x in importance_1y[-10:]][::-1]].to_csv(data_save_path+'/features_1y.csv', index=False)
+    final_1y6m_df[['date', 'next_prevalence', 'district'] + [x[0] for x in importance_1y6m[-10:]][::-1]].to_csv(data_save_path+'/features_1y6m.csv', index=False)
 
 
 if __name__ == "__main__":
