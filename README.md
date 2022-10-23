@@ -8,7 +8,7 @@
 ## Table of contents
 
 - [Getting Started](#getting-started)
-- [Requirments](#tools-required)
+- [Requirements](#Requirements)
 - [Running the code](#running-the-code)
 - [Development](#Development)
 - [Authors](#authors)
@@ -38,7 +38,7 @@ The project code follows the structure below:
 	└── data
 		└── contains raw and processed data
 ```
-## Requirments
+## Requirements
 - pandas
 - sklearn
 - numpy
