@@ -52,18 +52,18 @@ GitHublink - https://github.com/abroniewski/Child-Wasting-Prediction/tree/dc3
 These steps will run the full data-preparation, model building, prediction generation, and results comparison using the data provided in [data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
 
 1. Unzip the folder Child-Wasting-Prediction.zip and switch to the folder
-    ```
+    ```bash
     cd Child-Wasting-Prediction
     ```
 
 2. Install the dependencies:
-    ```
+    ```bash
     pip install -r requirments.txt
     ```
-   ***Note***: The scripts have been developped and tested with `Python 3.9`*
+   ***Note***: *The scripts have been developed and tested with `Python 3.9`*
 
-3. Once all dependencies are installed, we can run the ZHL Baseline model file **(model_1)**. The output is saved in `results/` directory. 
-    ```
+3. Once all dependencies are installed, we can run the ZHL Baseline model file **(model_1)**. The output his saved in `results/` directory. Running this script can take 15-20min. For convenience, the output has been saved already in `results/`.
+    ```bash
     python3 src/Baseline.py
     ```
     **Expected Outcome -** 
@@ -76,17 +76,17 @@ These steps will run the full data-preparation, model building, prediction gener
 
 4. The below code will extract the features from raw conflict data. The output data is saved in the `data/acled/` directory.
 
-    ```
+    ```bash
     python3 src/feature_engineering.py
     ```
 
 5. The below code will run the baseline model training with adjusted date preparation (Model 2) and adjusted data preparation with new features (Model 3). The results will be saved to the `results/` directory.  
     - For model_2
-    ```
+    ```bash
     python3 src/dc3_main.py model_2
     ```
     - For model_3
-    ```
+    ```bash
     python3 src/dc3_main.py model_3
     ```
     ***Note***: *The parameters 'model_2' and 'model_3' can be passed with the above script to generate **the baseline with adjusted preperation** and **combined conflict data model** results respectively. By default, it is running on our combined conflict data model (model_3)*.  
@@ -107,10 +107,23 @@ These steps will run the full data-preparation, model building, prediction gener
     ```
 
 6.  The below code combines all the results from model_1 (ZHL Baseline), model_2 (Adjusted Baseline) and model_3 (conflict data combined model) for comparison. 
-    ```
+    ```bash
     python3 src/combine_results.py
     ```
+    
+The results of all 3 models are saved to `results/combined_model_1_2_3_testresults.csv`. The CSV shows the actual next_prevalence for each district with the predictions of each model. The results can be viewed in terminal by running the following:
+```bash
+column -s, -t < results/combined_model_1_2_3_testresults.csv | less -#2 -N -S
+```
+**Expected Outcome of Combined Results** 
 
+```bash
+| district | date       | next_prevalence | predictions_model_1 | predictions_model_2 | predictions_model_3 |
+|----------|------------|-----------------|---------------------|---------------------|---------------------|
+| Burtinle | 2020-07-01 | 0.378...        |                     | 0.384...            | 0.363...            |
+| Garoowe  | 2020-07-01 | 0.312...        |                     | 0.307...            | 0.295...            |
+| Doolow   | 2020-07-01 | 0.364...        | 0.392...            | 0.441...            | 0.406...            |
+```
 
 ## Development
 
