@@ -89,7 +89,7 @@ These steps will run the full data-preparation, model building, prediction gener
     ```bash
     python3 src/dc3_main.py model_3
     ```
-    ***Note***: *The parameters 'model_2' and 'model_3' can be passed with the above script to generate **the baseline with adjusted preperation** and **combined conflict data model** results respectively. By default, it is running on our combined conflict data model (model_3)*.  
+    ***Note***: *The parameters 'model_2' and 'model_3' can be passed with the above script to generate **the baseline with adjusted preparation** and **combined conflict data model** results respectively. By default, it is running on our combined conflict data model (model_3)*.  
 
     **Expected Outcome with model_2** 
     ```
@@ -111,19 +111,7 @@ These steps will run the full data-preparation, model building, prediction gener
     python3 src/combine_results.py
     ```
     
-The results of all 3 models are saved to `results/combined_model_1_2_3_testresults.csv`. The CSV shows the actual next_prevalence for each district with the predictions of each model. The results can be viewed in terminal by running the following:
-```bash
-column -s, -t < results/combined_model_1_2_3_testresults.csv | less -#2 -N -S
-```
-**Expected Outcome of Combined Results** 
-
-```bash
-| district | date       | next_prevalence | predictions_model_1 | predictions_model_2 | predictions_model_3 |
-|----------|------------|-----------------|---------------------|---------------------|---------------------|
-| Burtinle | 2020-07-01 | 0.378...        |                     | 0.384...            | 0.363...            |
-| Garoowe  | 2020-07-01 | 0.312...        |                     | 0.307...            | 0.295...            |
-| Doolow   | 2020-07-01 | 0.364...        | 0.392...            | 0.441...            | 0.406...            |
-```
+The results of all 3 models are saved to `results/combined_model_1_2_3_testresults.csv`. The CSV shows the actual next_prevalence for each district with the predictions of each model. model_2 and model_3 have values for more districts than model_1 due to the changes in data preparation. 
 
 ## Development
 
