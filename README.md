@@ -38,6 +38,8 @@ The project code follows the structure below:
 	└── data
 		└── contains raw and processed data
 ```
+GitHublink - https://github.com/abroniewski/Child-Wasting-Prediction/tree/dc3
+
 ## Requirements
 - Python 3.9
 - pandas
@@ -79,8 +81,13 @@ These steps will run the full data-preparation, model building, prediction gener
     ```
 
 5. The below code will run the baseline model training with adjusted date preparation (Model 2) and adjusted data preparation with new features (Model 3). The results will be saved to the `results/` directory.  
+    - For model_2
     ```
-    python3 src/dc3_main.py {model_2/model_3}
+    python3 src/dc3_main.py model_2
+    ```
+    - For model_3
+    ```
+    python3 src/dc3_main.py model_3
     ```
     ***Note***: *The parameters 'model_2' and 'model_3' can be passed with the above script to generate **the baseline with adjusted preperation** and **combined conflict data model** results respectively. By default, it is running on our combined conflict data model (model_3)*.  
 

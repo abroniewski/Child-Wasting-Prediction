@@ -154,8 +154,8 @@ def train_and_evaluate(final_df):
         increase = np.where(test_labels > test_features['GAM Prevalence'], True, False)
         predicted_increase = np.where(predictions > test_features['GAM Prevalence'], True, False)
         acc = accuracy_score(increase, predicted_increase)
-        print('MAE:', mae)
-        print('Accuracy:', acc)
+        # print('MAE:', mae)
+        # print('Accuracy:', acc)
 
     evaluate(rf, X_test, y_test)
 
