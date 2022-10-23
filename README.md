@@ -39,12 +39,15 @@ The project code follows the structure below:
 		└── contains raw and processed data
 ```
 ## Requirements
+- Python 3.9
 - pandas
 - sklearn
 - numpy
 - matplotlib
 
 ## Running the Code
+
+These steps will run the full data-preparation, model building, prediction generation, and results comparison using the data provided in [data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
 
 1. Unzip the folder Child-Wasting-Prediction.zip and switch to the folder
     ```
@@ -55,8 +58,9 @@ The project code follows the structure below:
     ```
     pip install -r requirments.txt
     ```
+   ***Note***: The scripts have been developped and tested with `Python 3.9`*
 
-3. Once all dependencies are installed, we can run the ZHL Baseline model file **(model_1)**. The output is saved in result folder. 
+3. Once all dependencies are installed, we can run the ZHL Baseline model file **(model_1)**. The output is saved in `results/` directory. 
     ```
     python3 src/Baseline.py
     ```
@@ -68,26 +72,26 @@ The project code follows the structure below:
     0.05629900026844118 0.849862258953168
     ```
 
-4. The below code will extract the features from raw conflict data. The output data is saved in acled folder.
+4. The below code will extract the features from raw conflict data. The output data is saved in the `data/acled/` directory.
 
     ```
     python3 src/feature_engineering.py
     ```
 
-5. The below code will run our main file, it will generate baseline and conflict data model (model with conflict features) results.  
+5. The below code will run the baseline model training with adjusted date preparation (Model 2) and adjusted data preparation with new features (Model 3). The results will be saved to the `results/` directory.  
     ```
     python3 src/dc3_main.py {model_2/model_3}
     ```
-    The parameters "**model_2**" and "**model_3**" can be passed with the above script to generate **our baseline** and **combined conflict data model** results respecively. By default it is running on our combined conflict data model (model_3).  
+    ***Note***: *The parameters 'model_2' and 'model_3' can be passed with the above script to generate **the baseline with adjusted preperation** and **combined conflict data model** results respectively. By default, it is running on our combined conflict data model (model_3)*.  
 
-    **Expected Outcome with model_2 -** 
+    **Expected Outcome with model_2** 
     ```
     Total no of district after preproecssing are - 55 
     number of observations for training are - 275 and for testing are - 110 
     MAE(Mean Absolute Error) score for model_2 model on training data is - 0.021391660328296973
     MAE(Mean Absolute Error) score for model_2 model on test data is - 0.0512394083425881 
     ```
-    **Expected Outcome with model_3 -** 
+    **Expected Outcome with model_3** 
     ```
     Total no of district after preproecssing are - 55 
     number of observations for training are - 275 and for testing are - 110 
@@ -95,12 +99,10 @@ The project code follows the structure below:
     MAE(Mean Absolute Error) score for model_3 model on test data is - 0.05013554272083966 
     ```
 
-6.  The below code combine all the results from model_1 (ZHL Baseline),model_2 (Our Baseline) and model_3 (conflict data combined model) for comparision. 
+6.  The below code combines all the results from model_1 (ZHL Baseline), model_2 (Adjusted Baseline) and model_3 (conflict data combined model) for comparison. 
     ```
     python3 src/combine_results.py
     ```
-
-This above codes will run the full data-preperation, model building and prediction generation using the data provided in [data](https://github.com/abroniewski/Child-Wasting-Prediction.git/data).
 
 
 ## Development
